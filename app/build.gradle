@@ -20,6 +20,10 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    buildFeatures{
+        viewBinding true
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -66,7 +70,6 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.1'
 
     // Coroutine Lifecycle Scopes
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.3.0"
 
     // Navigation Component
@@ -89,4 +92,15 @@ dependencies {
     // Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
+    implementation 'com.github.Zhuinden:fragmentviewbindingdelegate-kt:1.0.0'
+
+    implementation "androidx.lifecycle:lifecycle-common-java8:2.2.0"
+
+    // Amplify
+    implementation 'com.amplifyframework:aws-api:1.16.13'
+    implementation 'com.amplifyframework:aws-datastore:1.16.13'
+    implementation 'com.amplifyframework:aws-auth-cognito:1.16.13'
+
+
 }
+apply plugin: "androidx.navigation.safeargs"

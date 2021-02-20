@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">AssigmentHub</string>
+
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="username">Username</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="welcome_back">Welcome Back!</string>
+    <string name="login_to_continue">Login to continue</string>
+
+    <string name="dont_have_account">Don’t have an account?</string>
+    <string name="email">Email</string>
+    <string name="name">Name</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="verify_otp">Verify OTP</string>
+    <string name="verify">Verify</string>
+    <string name="otp">OTP</string>
+
 </resources>

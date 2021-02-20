@@ -1,53 +1,43 @@
 package com.sagar.assigmenthub.ui.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.sagar.assigmenthub.R
-import com.sagar.assigmenthub.databinding.FragmentLoginBinding
+import com.sagar.assigmenthub.databinding.FragmentVerifyOtpBinding
 import com.sagar.assigmenthub.other.ResponseModel
 import com.sagar.assigmenthub.other.toast
-import com.sagar.assigmenthub.ui.viewmodels.LoginViewModel
+import com.sagar.assigmenthub.ui.viewmodels.VerifyOtpViewModel
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class LoginFragment : Fragment(R.layout.fragment_login) {
+class VerifyOtpFragment : Fragment(R.layout.fragment_verify_otp) {
 
-    private val binding by viewBinding(FragmentLoginBinding::bind)
-    private val viewModel: LoginViewModel by viewModels()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
+    private val binding by viewBinding(FragmentVerifyOtpBinding::bind)
+    private val args by navArgs<VerifyOtpFragmentArgs>()
+    private val viewModel: VerifyOtpViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.btnSignUp.setOnClickListener {
-            val email = binding.tietEmail.text.toString()
-            val password = binding.tietPassword.text.toString()
-
-            viewModel.loginUser(email, password)
+        binding.ivBack.setOnClickListener {
+            findNavController().popBackStack()
         }
 
-        binding.tvSignUp.setOnClickListener {
-            findNavController().navigate(
-                LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
-            )
+        binding.btnVerify.setOnClickListener {
+
+            val otp = binding.tietOtp.text.toString()
+            val email = args.email
+            viewModel.verifyOtp(email, otp)
         }
 
-        viewModel.loginUser.observe(
+        viewModel.verifyUser.observe(
             viewLifecycleOwner,
             Observer {
                 it.getContentIfNotHandled()?.let { result ->
@@ -56,6 +46,11 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                             Timber.i("Loading")
                         }
                         is ResponseModel.Success -> {
+
+                            findNavController().navigate(
+                                VerifyOtpFragmentDirections.actionVerifyOtpFragmentToHomeFragment()
+                            )
+
                             Timber.i(result.response)
                         }
                         is ResponseModel.Error -> {
