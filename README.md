@@ -17,7 +17,7 @@ Android app to manage assignments for teachers in college.
 
 ***You can Install and test latest AssigmentHub app from below 👇***
 
-[![AssigmentHub App](https://img.shields.io/badge/AssigmentHub✅-APK-red.svg?style=for-the-badge&logo=android)](https://github.com/hellosagar/Foodium/releases/latest/download/app.apk)
+[![AssigmentHub App](https://img.shields.io/badge/AssigmentHub✅-APK-red.svg?style=for-the-badge&logo=android)](https://github.com/hellosagar/Assigmenthub/releases/latest/download/app.apk)
 
 ## About
 It simply manges **assignments**
