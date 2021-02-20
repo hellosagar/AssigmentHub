@@ -7,7 +7,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.amplifyframework.core.Amplify
-import com.hellosagar.assigmenthub.ui.fragment.RegisterFragmentDirections
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import dev.hellosagar.assigmenthub.R

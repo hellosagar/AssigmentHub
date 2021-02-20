@@ -7,8 +7,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.hellosagar.assigmenthub.ui.fragment.VerifyOtpFragmentArgs
-import com.hellosagar.assigmenthub.ui.fragment.VerifyOtpFragmentDirections
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import dev.hellosagar.assigmenthub.R

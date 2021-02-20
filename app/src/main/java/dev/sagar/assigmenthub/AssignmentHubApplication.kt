@@ -4,8 +4,8 @@ import android.app.Application
 import com.amplifyframework.AmplifyException
 import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin
 import com.amplifyframework.core.Amplify
-import com.hellosagar.assigmenthub.BuildConfig
 import dagger.hilt.android.HiltAndroidApp
+import dev.hellosagar.assigmenthub.BuildConfig
 import dev.sagar.assigmenthub.utils.ReleaseTree
 import timber.log.Timber
 
