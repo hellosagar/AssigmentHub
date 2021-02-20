@@ -15,5 +15,6 @@
     <string name="verify_otp">Verify OTP</string>
     <string name="verify">Verify</string>
     <string name="otp">OTP</string>
+    <string name="home">Home</string>
 
 </resources>

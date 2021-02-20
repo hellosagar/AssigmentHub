@@ -13,7 +13,7 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="textInputStyle">@style/EditTextLayoutStyle</item>
-
+        <item name="android:windowBackground">@color/activity_bg_color</item>
     </style>
 
     <style name="AppTheme.Splash" parent="Theme.MaterialComponents.DayNight.NoActionBar">
