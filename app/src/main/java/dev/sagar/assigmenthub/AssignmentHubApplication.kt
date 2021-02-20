@@ -1,11 +1,12 @@
-package com.sagar.assigmenthub
+package dev.sagar.assigmenthub
 
 import android.app.Application
 import com.amplifyframework.AmplifyException
 import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin
 import com.amplifyframework.core.Amplify
-import com.sagar.assigmenthub.other.ReleaseTree
+import com.hellosagar.assigmenthub.BuildConfig
 import dagger.hilt.android.HiltAndroidApp
+import dev.sagar.assigmenthub.utils.ReleaseTree
 import timber.log.Timber
 
 @HiltAndroidApp

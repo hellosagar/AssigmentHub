@@ -1,4 +1,4 @@
-package com.sagar.assigmenthub.other
+package dev.sagar.assigmenthub.utils
 
 open class Event<out T>(private val data: T) {
 

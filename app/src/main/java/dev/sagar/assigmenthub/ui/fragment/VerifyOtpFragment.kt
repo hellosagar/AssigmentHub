@@ -1,4 +1,4 @@
-package com.sagar.assigmenthub.ui.fragments
+package dev.sagar.assigmenthub.ui.fragment
 
 import android.os.Bundle
 import android.view.View
@@ -7,13 +7,15 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.sagar.assigmenthub.R
-import com.sagar.assigmenthub.databinding.FragmentVerifyOtpBinding
-import com.sagar.assigmenthub.other.ResponseModel
-import com.sagar.assigmenthub.other.toast
-import com.sagar.assigmenthub.ui.viewmodels.VerifyOtpViewModel
+import com.hellosagar.assigmenthub.ui.fragment.VerifyOtpFragmentArgs
+import com.hellosagar.assigmenthub.ui.fragment.VerifyOtpFragmentDirections
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
+import dev.hellosagar.assigmenthub.R
+import dev.hellosagar.assigmenthub.databinding.FragmentVerifyOtpBinding
+import dev.sagar.assigmenthub.ui.viewmodel.VerifyOtpViewModel
+import dev.sagar.assigmenthub.utils.ResponseModel
+import dev.sagar.assigmenthub.utils.toast
 import timber.log.Timber
 
 @AndroidEntryPoint

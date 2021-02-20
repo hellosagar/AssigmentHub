@@ -1,13 +1,13 @@
-package com.sagar.assigmenthub.ui.viewmodels
+package dev.sagar.assigmenthub.ui.viewmodel
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.sagar.assigmenthub.other.Event
-import com.sagar.assigmenthub.other.ResponseModel
-import com.sagar.assigmenthub.other.isEmailValid
-import com.sagar.assigmenthub.repositories.AuthRepo
+import dev.sagar.assigmenthub.data.repositories.AuthRepo
+import dev.sagar.assigmenthub.utils.Event
+import dev.sagar.assigmenthub.utils.ResponseModel
+import dev.sagar.assigmenthub.utils.isEmailValid
 
 class RegisterViewModel @ViewModelInject constructor(
     private val authRepo: AuthRepo

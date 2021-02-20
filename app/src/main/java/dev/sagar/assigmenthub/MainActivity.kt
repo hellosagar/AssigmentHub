@@ -1,11 +1,12 @@
-package com.sagar.assigmenthub
+package dev.sagar.assigmenthub
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import com.amplifyframework.core.Amplify
-import com.sagar.assigmenthub.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
+import dev.hellosagar.assigmenthub.R
+import dev.hellosagar.assigmenthub.databinding.ActivityMainBinding
 import timber.log.Timber
 
 @AndroidEntryPoint

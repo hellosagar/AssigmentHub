@@ -1,4 +1,4 @@
-package com.sagar.assigmenthub.other
+package dev.sagar.assigmenthub.utils
 
 import android.util.Log
 import org.jetbrains.annotations.NotNull

@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/loginFragment"
         tools:layout="@layout/fragment_login"
-        android:name="com.sagar.assigmenthub.ui.fragments.LoginFragment"
+        android:name="dev.sagar.assigmenthub.ui.fragment.LoginFragment"
         android:label="LoginFragment" >
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
@@ -24,7 +24,7 @@
     <fragment
         android:id="@+id/registerFragment"
         tools:layout="@layout/fragment_register"
-        android:name="com.sagar.assigmenthub.ui.fragments.RegisterFragment"
+        android:name="dev.sagar.assigmenthub.ui.fragment.RegisterFragment"
         android:label="RegisterFragment" >
         <action
             android:id="@+id/action_registerFragment_to_verifyOtpFragment"
@@ -34,12 +34,12 @@
     <fragment
         android:id="@+id/homeFragment"
         tools:layout="@layout/fragment_home"
-        android:name="com.sagar.assigmenthub.ui.fragments.HomeFragment"
+        android:name="dev.sagar.assigmenthub.ui.fragment.HomeFragment"
         android:label="HomeFragment" />
     <fragment
         android:id="@+id/verifyOtpFragment"
         tools:layout="@layout/fragment_verify_otp"
-        android:name="com.sagar.assigmenthub.ui.fragments.VerifyOtpFragment"
+        android:name="dev.sagar.assigmenthub.ui.fragment.VerifyOtpFragment"
         android:label="VerifyOtpFragment" >
         <argument
             android:name="email"

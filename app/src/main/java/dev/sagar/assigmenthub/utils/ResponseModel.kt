@@ -1,4 +1,4 @@
-package com.sagar.assigmenthub.other
+package dev.sagar.assigmenthub.utils
 
 sealed class ResponseModel<out T> {
 

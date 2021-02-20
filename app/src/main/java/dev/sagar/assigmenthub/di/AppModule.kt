@@ -1,4 +1,4 @@
-package com.sagar.assigmenthub.di
+package dev.sagar.assigmenthub.di
 
 import dagger.Module
 import dagger.hilt.InstallIn
