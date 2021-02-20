@@ -57,9 +57,12 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         }
                         is ResponseModel.Success -> {
                             Timber.i(result.response)
+                            findNavController().navigate(
+                                LoginFragmentDirections.actionLoginFragmentToHomeFragment()
+                            )
                         }
                         is ResponseModel.Error -> {
-                            toast(result.error.toString())
+                            toast(result.message)
                             Timber.i(result.error)
                         }
                     }

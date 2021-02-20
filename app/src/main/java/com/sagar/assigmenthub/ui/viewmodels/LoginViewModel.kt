@@ -13,8 +13,8 @@ class LoginViewModel @ViewModelInject constructor(
     private val authRepo: AuthRepo
 ) : ViewModel() {
 
-    private val _loginUser = MutableLiveData<Event<ResponseModel<String>>>()
-    val loginUser: LiveData<Event<ResponseModel<String>>> = _loginUser
+    private var _loginUser: MutableLiveData<Event<ResponseModel<String>>> = MutableLiveData()
+    var loginUser: LiveData<Event<ResponseModel<String>>> = _loginUser
 
     fun loginUser(email: String, password: String) {
 
@@ -22,15 +22,20 @@ class LoginViewModel @ViewModelInject constructor(
             return
         }
 
-        _loginUser.value = Event(ResponseModel.Loading())
-        val response = authRepo.loginUser(email, password)
-        _loginUser.value = Event(response.value)
+        _loginUser.postValue(Event((ResponseModel.Loading())))
+
+        authRepo.loginUser(
+            email,
+            password
+        ) { result ->
+            _loginUser.postValue(Event(result))
+        }
     }
 
     private fun validateInput(email: String, password: String): Boolean {
 
         if (email.isEmpty()) {
-            _loginUser.value = Event(ResponseModel.Error(null, "Email cannot be empty"))
+            _loginUser.value = Event((ResponseModel.Error(null, "Email cannot be empty")))
             return false
         }
 

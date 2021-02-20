@@ -22,6 +22,8 @@ class VerifyOtpFragment : Fragment(R.layout.fragment_verify_otp) {
     private val binding by viewBinding(FragmentVerifyOtpBinding::bind)
     private val args by navArgs<VerifyOtpFragmentArgs>()
     private val viewModel: VerifyOtpViewModel by viewModels()
+    private lateinit var email: String
+    private lateinit var password: String
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -33,7 +35,8 @@ class VerifyOtpFragment : Fragment(R.layout.fragment_verify_otp) {
         binding.btnVerify.setOnClickListener {
 
             val otp = binding.tietOtp.text.toString()
-            val email = args.email
+            email = args.email
+            password = args.password
             viewModel.verifyOtp(email, otp)
         }
 
@@ -46,15 +49,33 @@ class VerifyOtpFragment : Fragment(R.layout.fragment_verify_otp) {
                             Timber.i("Loading")
                         }
                         is ResponseModel.Success -> {
+                            viewModel.loginUser(email, password)
+                        }
+                        is ResponseModel.Error -> {
+                            toast(result.message)
+                            Timber.i(result.error)
+                        }
+                    }
+                }
+            }
+        )
 
+        viewModel.loginUser.observe(
+            viewLifecycleOwner,
+            Observer {
+                it.getContentIfNotHandled()?.let { result ->
+                    when (result) {
+                        is ResponseModel.Loading -> {
+                            Timber.i("Loading")
+                        }
+                        is ResponseModel.Success -> {
+                            Timber.i(result.response)
                             findNavController().navigate(
                                 VerifyOtpFragmentDirections.actionVerifyOtpFragmentToHomeFragment()
                             )
-
-                            Timber.i(result.response)
                         }
                         is ResponseModel.Error -> {
-                            toast(result.error.toString())
+                            toast(result.message)
                             Timber.i(result.error)
                         }
                     }

@@ -13,6 +13,12 @@
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
             app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@+id/nav_graph"
+            app:popUpToInclusive="true"
+            />
     </fragment>
 
     <fragment
@@ -40,7 +46,12 @@
             app:argType="string" />
         <action
             android:id="@+id/action_verifyOtpFragment_to_homeFragment"
+            app:popUpTo="@+id/nav_graph"
+            app:popUpToInclusive="true"
             app:destination="@id/homeFragment" />
+        <argument
+            android:name="password"
+            app:argType="string" />
     </fragment>
 
 

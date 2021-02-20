@@ -13,18 +13,34 @@ class VerifyOtpViewModel @ViewModelInject constructor(
     private val authRepo: AuthRepo
 ) : ViewModel() {
 
-    private val _verifyUser = MutableLiveData<Event<ResponseModel<String>>>()
-    val verifyUser: LiveData<Event<ResponseModel<String>>> = _verifyUser
+    private var _verifyUser: MutableLiveData<Event<ResponseModel<String>>> = MutableLiveData()
+    var verifyUser: LiveData<Event<ResponseModel<String>>> = _verifyUser
+
+    private var _loginUser: MutableLiveData<Event<ResponseModel<String>>> = MutableLiveData()
+    var loginUser: LiveData<Event<ResponseModel<String>>> = _loginUser
+
+    fun loginUser(email: String, password: String) {
+
+        _loginUser.postValue(Event((ResponseModel.Loading())))
+
+        authRepo.loginUser(
+            email,
+            password
+        ) { result ->
+            _loginUser.postValue(Event(result))
+        }
+    }
 
     fun verifyOtp(email: String, otp: String) {
-
         if (!validateInput(otp)) {
             return
         }
 
-        _verifyUser.value = Event(ResponseModel.Loading())
-        val response = authRepo.verifyUser(email, otp)
-        _verifyUser.value = Event(response.value)
+        authRepo.verifyUser(
+            email, otp
+        ) { result ->
+            _verifyUser.postValue(Event(result))
+        }
     }
 
     private fun validateInput(otp: String): Boolean {
@@ -35,7 +51,7 @@ class VerifyOtpViewModel @ViewModelInject constructor(
         }
 
         if (otp.length != 6) {
-            _verifyUser.value = Event(ResponseModel.Error(null, "OTP should be $OTP_LENGTH"))
+            _verifyUser.value = Event(ResponseModel.Error(null, "OTP should be $OTP_LENGTH digit"))
             return false
         }
 

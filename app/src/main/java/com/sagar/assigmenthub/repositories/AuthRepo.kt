@@ -1,7 +1,5 @@
 package com.sagar.assigmenthub.repositories
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.amplifyframework.auth.AuthUserAttribute
 import com.amplifyframework.auth.AuthUserAttributeKey
 import com.amplifyframework.auth.options.AuthSignUpOptions
@@ -12,17 +10,16 @@ import javax.inject.Inject
 
 class AuthRepo @Inject constructor() {
 
-    private var userLoginLiveData = MutableLiveData<ResponseModel<String>>()
-    private var userSignUpLiveData = MutableLiveData<ResponseModel<String>>()
-    private var verifyUserLiveData = MutableLiveData<ResponseModel<String>>()
-
-    fun createUser(email: String, name: String, password: String): LiveData<ResponseModel<String>> {
+    fun createUser(
+        email: String,
+        name: String,
+        password: String,
+        callback: (ResponseModel<String>) -> Unit
+    ) {
 
         val attributes: ArrayList<AuthUserAttribute> = ArrayList()
         attributes.add(AuthUserAttribute(AuthUserAttributeKey.email(), email))
         attributes.add(AuthUserAttribute(AuthUserAttributeKey.name(), name))
-
-        userSignUpLiveData.value = ResponseModel.Loading()
 
         Amplify.Auth.signUp(
             email,
@@ -30,53 +27,52 @@ class AuthRepo @Inject constructor() {
             AuthSignUpOptions.builder().userAttributes(attributes).build(),
             { result ->
                 Timber.i("AuthQuickStart Result: $result")
-                userSignUpLiveData.postValue(ResponseModel.Success("User created"))
+                callback(ResponseModel.Success("User created"))
             },
             { error ->
                 Timber.e("AuthQuickStart Sign up failed $error")
-                userSignUpLiveData.postValue(ResponseModel.Error(error))
+                callback(ResponseModel.Error(error, error.recoverySuggestion))
             }
         )
-
-        return userSignUpLiveData
     }
 
-    fun loginUser(email: String, password: String): LiveData<ResponseModel<String>> {
-
-        userLoginLiveData.postValue(ResponseModel.Loading())
+    fun loginUser(
+        email: String,
+        password: String,
+        callback: (ResponseModel<String>) -> Unit
+    ) {
 
         Amplify.Auth.signIn(
             email,
             password,
             { result ->
                 Timber.i("AuthQuickstart" + if (result.isSignInComplete) "Sign in succeeded" else "Sign in not complete")
-                userLoginLiveData.postValue(ResponseModel.Success("User created"))
+                callback(ResponseModel.Success("User created $result"))
             },
             { error ->
                 Timber.e("AuthQuickstart $error) ")
-                userLoginLiveData.postValue(ResponseModel.Error(error))
+                callback(ResponseModel.Error(null, error.recoverySuggestion))
             }
         )
-        return userLoginLiveData
     }
 
-    fun verifyUser(email: String, otp: String): LiveData<ResponseModel<String>> {
-
-        verifyUserLiveData.value = ResponseModel.Loading()
+    fun verifyUser(
+        email: String,
+        otp: String,
+        callback: (ResponseModel<String>) -> Unit
+    ) {
 
         Amplify.Auth.confirmSignUp(
             email,
             otp,
             { result ->
                 Timber.i("AuthQuickstart" + if (result.isSignUpComplete) "Confirm signUp succeeded" else "Confirm sign up not complete")
-                verifyUserLiveData.postValue(ResponseModel.Success("User created"))
+                callback(ResponseModel.Success("User created"))
             },
             { error ->
                 Timber.e("AuthQuickstart $error")
-                verifyUserLiveData.postValue(ResponseModel.Error(error))
+                callback(ResponseModel.Error(error, error.recoverySuggestion))
             }
         )
-
-        return verifyUserLiveData
     }
 }

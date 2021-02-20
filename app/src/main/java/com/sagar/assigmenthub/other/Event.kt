@@ -1,6 +1,6 @@
 package com.sagar.assigmenthub.other
 
-open class Event<out T>(private val data: T?) {
+open class Event<out T>(private val data: T) {
 
     var hasBeenHandled = false
         private set

@@ -30,10 +30,11 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
         }
 
         var email = ""
+        var password = ""
         binding.btnSignUp.setOnClickListener {
             email = binding.tietEmail.text.toString()
             val name = binding.tietName.text.toString()
-            val password = binding.tietPassword.text.toString()
+            password = binding.tietPassword.text.toString()
             val confirmPassword = binding.tietConfirmPassword.text.toString()
 
             viewModel.createUser(email, name, password, confirmPassword)
@@ -41,23 +42,26 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
 
         viewModel.createUser.observe(
             viewLifecycleOwner,
-            Observer { result ->
-                when (result) {
-                    is ResponseModel.Loading -> {
-                        Timber.i("Loading")
-                    }
-                    is ResponseModel.Success -> {
-                        findNavController().navigate(
-                            RegisterFragmentDirections.actionRegisterFragmentToVerifyOtpFragment(
-                                email
+            Observer {
+                it.getContentIfNotHandled()?.let { result ->
+                    when (result) {
+                        is ResponseModel.Loading -> {
+                            Timber.i("Loading")
+                        }
+                        is ResponseModel.Success -> {
+                            findNavController().navigate(
+                                RegisterFragmentDirections.actionRegisterFragmentToVerifyOtpFragment(
+                                    email,
+                                    password
+                                )
                             )
-                        )
 
-                        Timber.i(result.response)
-                    }
-                    is ResponseModel.Error -> {
-                        toast(result.error.toString())
-                        Timber.i(result.error)
+                            Timber.i(result.response)
+                        }
+                        is ResponseModel.Error -> {
+                            toast(result.message)
+                            Timber.i(result.error)
+                        }
                     }
                 }
             }
