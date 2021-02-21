@@ -13,12 +13,6 @@
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
             app:destination="@id/registerFragment" />
-        <action
-            android:id="@+id/action_loginFragment_to_homeFragment"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@+id/nav_graph"
-            app:popUpToInclusive="true"
-            />
     </fragment>
 
     <fragment
@@ -32,11 +26,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/homeFragment"
-        tools:layout="@layout/fragment_home"
-        android:name="dev.sagar.assigmenthub.ui.fragment.HomeFragment"
-        android:label="HomeFragment" />
-    <fragment
         android:id="@+id/verifyOtpFragment"
         tools:layout="@layout/fragment_verify_otp"
         android:name="dev.sagar.assigmenthub.ui.fragment.VerifyOtpFragment"
@@ -44,11 +33,6 @@
         <argument
             android:name="email"
             app:argType="string" />
-        <action
-            android:id="@+id/action_verifyOtpFragment_to_homeFragment"
-            app:popUpTo="@+id/nav_graph"
-            app:popUpToInclusive="true"
-            app:destination="@id/homeFragment" />
         <argument
             android:name="password"
             app:argType="string" />

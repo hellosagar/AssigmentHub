@@ -1,5 +1,6 @@
 package dev.sagar.assigmenthub.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -11,6 +12,7 @@ import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import dev.hellosagar.assigmenthub.R
 import dev.hellosagar.assigmenthub.databinding.FragmentVerifyOtpBinding
+import dev.sagar.assigmenthub.HomeActivity
 import dev.sagar.assigmenthub.ui.viewmodel.VerifyOtpViewModel
 import dev.sagar.assigmenthub.utils.ResponseModel
 import dev.sagar.assigmenthub.utils.toast
@@ -70,9 +72,13 @@ class VerifyOtpFragment : Fragment(R.layout.fragment_verify_otp) {
                         }
                         is ResponseModel.Success -> {
                             Timber.i(result.response)
-                            findNavController().navigate(
-                                VerifyOtpFragmentDirections.actionVerifyOtpFragmentToHomeFragment()
+                            requireActivity().startActivity(
+                                Intent(
+                                    requireActivity(),
+                                    HomeActivity::class.java
+                                )
                             )
+                            requireActivity().finish()
                         }
                         is ResponseModel.Error -> {
                             toast(result.message)
