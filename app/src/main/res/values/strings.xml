@@ -23,5 +23,15 @@
     <string name="add_assignment">Add Assignment</string>
     <string name="ended">Ended</string>
     <string name="ongoing">Ongoing</string>
+    <string name="roll_no">Roll No.</string>
+    <string name="select_year">Select Year</string>
+    <string name="select_branch">Select Branch</string>
+    <string name="submit">Submit</string>
+    <string name="submission_date">Submission Date</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="subject">Subject</string>
+    <string name="last_submission_date">Last Submission Date</string>
+    <string name="description">Description</string>
+    <string name="no_data">No Data</string>
 
 </resources>

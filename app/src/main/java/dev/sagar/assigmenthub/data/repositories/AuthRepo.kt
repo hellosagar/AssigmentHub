@@ -1,16 +1,18 @@
 package dev.sagar.assigmenthub.data.repositories
 
+import com.amplifyframework.auth.AuthCategory
 import com.amplifyframework.auth.AuthUserAttribute
 import com.amplifyframework.auth.AuthUserAttributeKey
 import com.amplifyframework.auth.options.AuthSignUpOptions
-import com.amplifyframework.core.Amplify
 import dev.sagar.assigmenthub.utils.ResponseModel
 import timber.log.Timber
 import javax.inject.Inject
 
-class AuthRepo @Inject constructor() {
+class AuthRepo @Inject constructor(
+    private val auth: AuthCategory
+) {
 
-    fun createUser(
+    fun signUpTeacher(
         email: String,
         name: String,
         password: String,
@@ -21,56 +23,56 @@ class AuthRepo @Inject constructor() {
         attributes.add(AuthUserAttribute(AuthUserAttributeKey.email(), email))
         attributes.add(AuthUserAttribute(AuthUserAttributeKey.name(), name))
 
-        Amplify.Auth.signUp(
+        auth.signUp(
             email,
             password,
             AuthSignUpOptions.builder().userAttributes(attributes).build(),
             { result ->
-                Timber.i("AuthQuickStart Result: $result")
-                callback(ResponseModel.Success("User created"))
+                Timber.i("signUpTeacher result: $result")
+                callback(ResponseModel.Success("Teacher signUp"))
             },
             { error ->
-                Timber.e("AuthQuickStart Sign up failed $error")
+                Timber.e("signUpTeacher error $error")
                 callback(ResponseModel.Error(error, error.recoverySuggestion))
             }
         )
     }
 
-    fun loginUser(
+    fun signInTeacher(
         email: String,
         password: String,
         callback: (ResponseModel<String>) -> Unit
     ) {
 
-        Amplify.Auth.signIn(
+        auth.signIn(
             email,
             password,
             { result ->
-                Timber.i("AuthQuickstart" + if (result.isSignInComplete) "Sign in succeeded" else "Sign in not complete")
-                callback(ResponseModel.Success("User created $result"))
+                Timber.i("signInTeacher $result")
+                callback(ResponseModel.Success("Teacher signIn $result"))
             },
             { error ->
-                Timber.e("AuthQuickstart $error) ")
+                Timber.e("signInTeacher $error) ")
                 callback(ResponseModel.Error(null, error.recoverySuggestion))
             }
         )
     }
 
-    fun verifyUser(
+    fun confirmTeacher(
         email: String,
         otp: String,
         callback: (ResponseModel<String>) -> Unit
     ) {
 
-        Amplify.Auth.confirmSignUp(
+        auth.confirmSignUp(
             email,
             otp,
             { result ->
-                Timber.i("AuthQuickstart" + if (result.isSignUpComplete) "Confirm signUp succeeded" else "Confirm sign up not complete")
-                callback(ResponseModel.Success("User created"))
+                Timber.i("confirmTeacher $result")
+                callback(ResponseModel.Success("Teacher confirmed!"))
             },
             { error ->
-                Timber.e("AuthQuickstart $error")
+                Timber.e("confirmTeacher $error")
                 callback(ResponseModel.Error(error, error.recoverySuggestion))
             }
         )

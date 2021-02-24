@@ -1,16 +1,27 @@
 package dev.sagar.assigmenthub.ui.viewmodel
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.preferencesKey
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.amplifyframework.datastore.generated.model.Teacher
 import dev.sagar.assigmenthub.data.repositories.AuthRepo
+import dev.sagar.assigmenthub.data.repositories.DatabaseRepo
+import dev.sagar.assigmenthub.utils.Constants
 import dev.sagar.assigmenthub.utils.Event
 import dev.sagar.assigmenthub.utils.ResponseModel
 import dev.sagar.assigmenthub.utils.isEmailValid
+import kotlinx.coroutines.launch
 
 class LoginViewModel @ViewModelInject constructor(
-    private val authRepo: AuthRepo
+    private val authRepo: AuthRepo,
+    private val databaseRepo: DatabaseRepo,
+    private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
 
     private var _loginUser: MutableLiveData<Event<ResponseModel<String>>> = MutableLiveData()
@@ -24,11 +35,24 @@ class LoginViewModel @ViewModelInject constructor(
 
         _loginUser.postValue(Event((ResponseModel.Loading())))
 
-        authRepo.loginUser(
+        authRepo.signInTeacher(
             email,
             password
         ) { result ->
-            _loginUser.postValue(Event(result))
+            getTeacher((result as ResponseModel.Success).response, email)
+        }
+    }
+
+    private fun getTeacher(authResponse: String, email: String) {
+
+        databaseRepo.getTeacher(
+            email
+        ) { result ->
+            val teacher: Teacher = (result as ResponseModel.Success).response
+            viewModelScope.launch {
+                saveTeacherInfo(teacher.id, teacher.name, teacher.email)
+                _loginUser.postValue(Event(ResponseModel.Success(authResponse)))
+            }
         }
     }
 
@@ -56,5 +80,17 @@ class LoginViewModel @ViewModelInject constructor(
         }
 
         return true
+    }
+
+    private suspend fun saveTeacherInfo(id: String, name: String, email: String) {
+        val idKey = preferencesKey<String>(Constants.TEACHER_ID)
+        val nameKey = preferencesKey<String>(Constants.TEACHER_NAME)
+        val emailKey = preferencesKey<String>(Constants.TEACHER_EMAIL)
+
+        dataStore.edit { settings ->
+            settings[idKey] = id
+            settings[nameKey] = name
+            settings[emailKey] = email
+        }
     }
 }

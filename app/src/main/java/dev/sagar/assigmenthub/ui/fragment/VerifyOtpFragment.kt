@@ -26,6 +26,7 @@ class VerifyOtpFragment : Fragment(R.layout.fragment_verify_otp) {
     private val viewModel: VerifyOtpViewModel by viewModels()
     private lateinit var email: String
     private lateinit var password: String
+    private lateinit var name: String
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -35,14 +36,14 @@ class VerifyOtpFragment : Fragment(R.layout.fragment_verify_otp) {
         }
 
         binding.btnVerify.setOnClickListener {
-
             val otp = binding.tietOtp.text.toString()
             email = args.email
             password = args.password
+            name = args.name
             viewModel.verifyOtp(email, otp)
         }
 
-        viewModel.verifyUser.observe(
+        viewModel.verifyTeacher.observe(
             viewLifecycleOwner,
             Observer {
                 it.getContentIfNotHandled()?.let { result ->
@@ -51,7 +52,7 @@ class VerifyOtpFragment : Fragment(R.layout.fragment_verify_otp) {
                             Timber.i("Loading")
                         }
                         is ResponseModel.Success -> {
-                            viewModel.loginUser(email, password)
+                            viewModel.loginTeacher(email, password)
                         }
                         is ResponseModel.Error -> {
                             toast(result.message)
@@ -62,7 +63,7 @@ class VerifyOtpFragment : Fragment(R.layout.fragment_verify_otp) {
             }
         )
 
-        viewModel.loginUser.observe(
+        viewModel.loginTeacher.observe(
             viewLifecycleOwner,
             Observer {
                 it.getContentIfNotHandled()?.let { result ->
@@ -72,6 +73,27 @@ class VerifyOtpFragment : Fragment(R.layout.fragment_verify_otp) {
                         }
                         is ResponseModel.Success -> {
                             Timber.i(result.response)
+                            viewModel.createTeacher(name, email)
+                        }
+                        is ResponseModel.Error -> {
+                            toast(result.message)
+                            Timber.i(result.error)
+                        }
+                    }
+                }
+            }
+        )
+
+        viewModel.createTeacher.observe(
+            viewLifecycleOwner,
+            Observer {
+                it.getContentIfNotHandled()?.let { result ->
+                    when (result) {
+                        is ResponseModel.Loading -> {
+                            Timber.i("Loading")
+                        }
+                        is ResponseModel.Success -> {
+                            Timber.i(result.message)
                             requireActivity().startActivity(
                                 Intent(
                                     requireActivity(),

@@ -2,6 +2,7 @@ package dev.sagar.assigmenthub
 
 import android.app.Application
 import com.amplifyframework.AmplifyException
+import com.amplifyframework.api.aws.AWSApiPlugin
 import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin
 import com.amplifyframework.core.Amplify
 import dagger.hilt.android.HiltAndroidApp
@@ -31,8 +32,8 @@ class AssignmentHubApplication : Application() {
         }
 
         try {
-            // Add this line, to include the Auth plugin.
             Amplify.addPlugin(AWSCognitoAuthPlugin())
+            Amplify.addPlugin(AWSApiPlugin())
             Amplify.configure(applicationContext)
             Timber.i("MyAmplifyApp Initialized Amplify")
         } catch (error: AmplifyException) {

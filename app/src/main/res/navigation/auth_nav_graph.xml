@@ -36,6 +36,9 @@
         <argument
             android:name="password"
             app:argType="string" />
+        <argument
+            android:name="name"
+            app:argType="string" />
     </fragment>
 
 

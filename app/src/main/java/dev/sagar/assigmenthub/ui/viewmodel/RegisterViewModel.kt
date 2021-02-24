@@ -13,18 +13,18 @@ class RegisterViewModel @ViewModelInject constructor(
     private val authRepo: AuthRepo
 ) : ViewModel() {
 
-    private var _createUser: MutableLiveData<Event<ResponseModel<String>>> = MutableLiveData()
-    var createUser: LiveData<Event<ResponseModel<String>>> = _createUser
+    private var _createTeacher: MutableLiveData<Event<ResponseModel<String>>> = MutableLiveData()
+    var createTeacher: LiveData<Event<ResponseModel<String>>> = _createTeacher
 
     fun createUser(email: String, name: String, password: String, confirmPassword: String) {
         if (!validateInput(email, name, password, confirmPassword)) {
             return
         }
 
-        authRepo.createUser(
+        authRepo.signUpTeacher(
             email, name, password
         ) { result ->
-            _createUser.postValue(Event(result))
+            _createTeacher.postValue(Event(result))
         }
     }
 
@@ -36,44 +36,44 @@ class RegisterViewModel @ViewModelInject constructor(
     ): Boolean {
 
         if (name.isEmpty()) {
-            _createUser.value = Event(ResponseModel.Error(null, "Name cannot be empty"))
+            _createTeacher.value = Event(ResponseModel.Error(null, "Name cannot be empty"))
             return false
         }
 
         if (email.isEmpty()) {
-            _createUser.value = Event(ResponseModel.Error(null, "Email cannot be empty"))
+            _createTeacher.value = Event(ResponseModel.Error(null, "Email cannot be empty"))
             return false
         }
 
         if (!email.isEmailValid()) {
-            _createUser.value = Event(ResponseModel.Error(null, "Email is not valid"))
+            _createTeacher.value = Event(ResponseModel.Error(null, "Email is not valid"))
             return false
         }
 
         if (password.isEmpty()) {
-            _createUser.value = Event(ResponseModel.Error(null, "Password cannot be empty"))
+            _createTeacher.value = Event(ResponseModel.Error(null, "Password cannot be empty"))
             return false
         }
 
         if (confirmPassword.isEmpty()) {
-            _createUser.value = Event(ResponseModel.Error(null, "Confirm password cannot be empty"))
+            _createTeacher.value = Event(ResponseModel.Error(null, "Confirm password cannot be empty"))
             return false
         }
 
         if (password.length < 8 || password.length >= 20) {
-            _createUser.value =
+            _createTeacher.value =
                 Event(ResponseModel.Error(null, "Password must be at least 8 characters"))
             return false
         }
 
         if (confirmPassword.length < 8 || confirmPassword.length >= 20) {
-            _createUser.value =
+            _createTeacher.value =
                 Event(ResponseModel.Error(null, "Confirm Password must be at least 8 characters"))
             return false
         }
 
         if (password != confirmPassword) {
-            _createUser.value =
+            _createTeacher.value =
                 Event(ResponseModel.Error(null, "Password must be same"))
             return false
         }

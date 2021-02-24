@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.amplifyframework.core.Amplify
 import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import dev.hellosagar.assigmenthub.R
@@ -31,16 +30,17 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
 
         var email = ""
         var password = ""
+        var name = ""
         binding.btnSignUp.setOnClickListener {
             email = binding.tietEmail.text.toString()
-            val name = binding.tietName.text.toString()
+            name = binding.tietName.text.toString()
             password = binding.tietPassword.text.toString()
             val confirmPassword = binding.tietConfirmPassword.text.toString()
 
             viewModel.createUser(email, name, password, confirmPassword)
         }
 
-        viewModel.createUser.observe(
+        viewModel.createTeacher.observe(
             viewLifecycleOwner,
             Observer {
                 it.getContentIfNotHandled()?.let { result ->
@@ -52,10 +52,10 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
                             findNavController().navigate(
                                 RegisterFragmentDirections.actionRegisterFragmentToVerifyOtpFragment(
                                     email,
-                                    password
+                                    password,
+                                    name
                                 )
                             )
-
                             Timber.i(result.response)
                         }
                         is ResponseModel.Error -> {
@@ -67,18 +67,4 @@ class RegisterFragment : Fragment(R.layout.fragment_register) {
             }
         )
     }
-
-    fun signOut() {
-        Amplify.Auth.signOut(
-            { Timber.i("AuthQuickstart Signed out successfully") },
-            { error -> Timber.e("AuthQuickstart $error") }
-        )
-    }
 }
-
-/*
-        Amplify.Auth.fetchAuthSession(
-            { result -> Timber.i("AmplifyQuickstart $result") },
-            { error -> Timber.e("AmplifyQuickstart $error") }
-        )
-         */
