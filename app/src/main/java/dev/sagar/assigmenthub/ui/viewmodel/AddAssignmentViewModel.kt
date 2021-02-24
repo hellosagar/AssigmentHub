@@ -44,7 +44,6 @@ class AddAssignmentViewModel @ViewModelInject constructor(
         ) {
             return
         }
-
         val year = Year.valueOf(yearString)
         val branch = Branch.valueOf(branchString)
         val date = Date()
