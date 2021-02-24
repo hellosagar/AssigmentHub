@@ -21,7 +21,6 @@ class AddAssignmentViewModel @ViewModelInject constructor(
     private val databaseRepo: DatabaseRepo,
     private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
-
     private var _createAssignment: MutableLiveData<Event<ResponseModel<String>>> = MutableLiveData()
     var createAssignment: LiveData<Event<ResponseModel<String>>> = _createAssignment
 
