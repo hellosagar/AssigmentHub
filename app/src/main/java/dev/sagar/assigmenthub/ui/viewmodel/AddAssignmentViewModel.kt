@@ -32,15 +32,7 @@ class AddAssignmentViewModel @ViewModelInject constructor(
         lastSubmissionDateString: String,
         description: String
     ) {
-        if (!validateInput(
-                name,
-                subject,
-                branchString,
-                yearString,
-                lastSubmissionDateString,
-                description
-            )
-        ) {
+        if (!validateInput(name, subject, branchString, yearString, lastSubmissionDateString, description)) {
             return
         }
         val year = Year.valueOf(yearString)
