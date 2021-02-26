@@ -19,7 +19,6 @@ import static com.amplifyframework.core.model.query.predicate.QueryField.field;
 /** This is an auto generated class representing the Teacher type in your schema. */
 @SuppressWarnings("all")
 @ModelConfig(pluralName = "Teachers")
-@Index(name = "emailIndex", fields = {"email"})
 public final class Teacher implements Model {
   public static final QueryField ID = field("Teacher", "id");
   public static final QueryField NAME = field("Teacher", "name");

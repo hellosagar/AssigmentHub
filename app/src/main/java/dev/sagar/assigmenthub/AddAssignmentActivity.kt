@@ -1,5 +1,6 @@
 package dev.sagar.assigmenthub
 
+import android.app.Activity
 import android.os.Bundle
 import android.os.Parcel
 import android.view.View
@@ -76,6 +77,7 @@ class AddAssignmentActivity : AppCompatActivity() {
                         is ResponseModel.Success -> {
                             toast("Assignment Added!")
                             Timber.i(result.response)
+                            setResult(Activity.RESULT_OK)
                             finish()
                         }
                         is ResponseModel.Error -> {

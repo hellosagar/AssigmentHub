@@ -13,8 +13,7 @@ class AssignmentAdapter(
 ) : RecyclerView.Adapter<AssignmentAdapter.AssignmentViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AssignmentViewHolder {
-        val binding =
-            ItemAssignmentBinding.inflate((LayoutInflater.from(parent.context)), parent, false)
+        val binding = ItemAssignmentBinding.inflate((LayoutInflater.from(parent.context)), parent, false)
         return AssignmentViewHolder(binding)
     }
 

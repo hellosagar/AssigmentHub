@@ -33,5 +33,10 @@
     <string name="last_submission_date">Last Submission Date</string>
     <string name="description">Description</string>
     <string name="no_data">No Data</string>
+    <string name="end_assignment">End Assignment</string>
+    <string name="end">End</string>
+
+    <string name="students_completed">Students Completed %s</string>
+    <string name="students_uncompleted">Students Completed %s</string>
 
 </resources>

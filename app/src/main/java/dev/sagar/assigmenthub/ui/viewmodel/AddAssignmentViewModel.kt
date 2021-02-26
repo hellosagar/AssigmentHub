@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.amplifyframework.datastore.generated.model.Assignment
 import com.amplifyframework.datastore.generated.model.Branch
 import com.amplifyframework.datastore.generated.model.Year
 import dev.sagar.assigmenthub.data.repositories.DatabaseRepo
@@ -21,6 +22,7 @@ class AddAssignmentViewModel @ViewModelInject constructor(
     private val databaseRepo: DatabaseRepo,
     private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
+
     private var _createAssignment: MutableLiveData<Event<ResponseModel<String>>> = MutableLiveData()
     var createAssignment: LiveData<Event<ResponseModel<String>>> = _createAssignment
 
@@ -32,7 +34,15 @@ class AddAssignmentViewModel @ViewModelInject constructor(
         lastSubmissionDateString: String,
         description: String
     ) {
-        if (!validateInput(name, subject, branchString, yearString, lastSubmissionDateString, description)) {
+        if (!validateInput(
+                name,
+                subject,
+                branchString,
+                yearString,
+                lastSubmissionDateString,
+                description
+            )
+        ) {
             return
         }
         val year = Year.valueOf(yearString)
@@ -45,9 +55,69 @@ class AddAssignmentViewModel @ViewModelInject constructor(
             databaseRepo.createAssignment(
                 name, subject, branch, year, date, description, teacherID
             ) { result ->
-                _createAssignment.postValue(Event(result))
+                if (result is ResponseModel.Success) {
+                    getAllStudentWithBranchYear(result.response)
+                } else {
+                    _createAssignment.postValue(
+                        Event(
+                            ResponseModel.Error(
+                                null,
+                                "Unable to create the Assignment!"
+                            )
+                        )
+                    )
+                }
             }
         }
+    }
+
+    private fun getAllStudentWithBranchYear(assignment: Assignment) {
+
+        var mappingCount = 0
+
+        viewModelScope.launch {
+            val branchYearID = assignment.branchYearId
+
+            databaseRepo.getStudentsFromBranchYearID(
+                branchYearID
+            ) { result ->
+                if (result is ResponseModel.Success) {
+                    for (student in result.response) {
+                        createStudentAssignmentMapping(
+                            student.id, assignment.id
+                        ) {
+                            mappingCount++
+                            if (result.response.size == mappingCount) {
+                                _createAssignment.postValue(
+                                    Event(
+                                        ResponseModel.Success(
+                                            "Assignment created!"
+                                        )
+                                    )
+                                )
+                            }
+                        }
+                    }
+                } else {
+                    _createAssignment.postValue(
+                        Event(
+                            ResponseModel.Error(
+                                null,
+                                "Unable to create the Assignment!"
+                            )
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    private fun createStudentAssignmentMapping(
+        studentID: String,
+        assignmentID: String,
+        callback: (ResponseModel<String>) -> Unit
+    ) {
+        databaseRepo.createStudentAssignmentMapping(studentID, assignmentID, callback)
     }
 
     private fun validateInput(

@@ -58,18 +58,35 @@ class DatabaseRepo @Inject constructor(
     }
 
     fun getAssignments(
-        email: String,
+        teacherID: String,
         callback: (ResponseModel<List<Assignment>>) -> Unit
     ) {
         api.mutate(
-            ModelQuery.list(Teacher::class.java, Teacher.EMAIL.eq(email)),
+            ModelQuery.list(Assignment::class.java, Assignment.TEACHER_ID.eq(teacherID)),
             { result ->
                 Timber.i("getAssignments result: $result")
-                val assignments = (result.data.items).toList()[0].assignments.toList()
+                val assignments: List<Assignment> = (result.data.items).toList()
                 callback(ResponseModel.Success(assignments))
             },
             { error ->
                 Timber.e("getTeacher error: $error")
+                callback(ResponseModel.Error(error, error.recoverySuggestion))
+            }
+        )
+    }
+
+    fun endAssignment(
+        assignment: Assignment,
+        callback: (ResponseModel<String>) -> Unit
+    ) {
+        api.mutate(
+            ModelMutation.update(assignment),
+            { result ->
+                Timber.i("endAssignment result: $result")
+                callback(ResponseModel.Success(result.toString()))
+            },
+            { error ->
+                Timber.e("endAssignment error: $error")
                 callback(ResponseModel.Error(error, error.recoverySuggestion))
             }
         )
@@ -105,6 +122,66 @@ class DatabaseRepo @Inject constructor(
         )
     }
 
+    fun getStudentsFromBranchYearID(
+        branchYearID: String,
+        callback: (ResponseModel<List<Student>>) -> Unit
+    ) {
+
+        api.query(
+            ModelQuery.list(Student::class.java, Student.BRANCH_YEAR_ID.eq(branchYearID)),
+            { result ->
+                val studentsList: List<Student> = (result.data.items).toList()
+                callback(ResponseModel.Success(studentsList))
+            },
+            { error ->
+                callback(ResponseModel.Error(error, "getStudentsFromBranchYearID error $error"))
+            }
+        )
+    }
+
+    fun createStudentAssignmentMapping(
+        studentID: String,
+        assignmentID: String,
+        callback: (ResponseModel<String>) -> Unit
+    ) {
+
+        val studentAssignmentMapping = StudentAssignmentMapping.builder()
+            .status(false)
+            .assignment(Assignment.justId(assignmentID))
+            .student(Student.justId(studentID))
+            .build()
+
+        api.mutate(
+            ModelMutation.create(studentAssignmentMapping),
+            { result ->
+                Timber.i("createStudentAssignmentMapping result: $result")
+                callback(ResponseModel.Success(result.data.toString()))
+            },
+            { error ->
+                Timber.e("createAssignment error $error")
+                callback(ResponseModel.Error(error, error.recoverySuggestion))
+            }
+        )
+    }
+
+    fun updateStudentAssignmentMapping(
+        studentAssignmentMapping: StudentAssignmentMapping,
+        callback: (ResponseModel<String>) -> Unit
+    ) {
+
+        api.mutate(
+            ModelMutation.update(studentAssignmentMapping),
+            { result ->
+                Timber.i("updateStudentAssignmentMapping result: $result")
+                callback(ResponseModel.Success(result.data.toString()))
+            },
+            { error ->
+                Timber.e("updateStudentAssignmentMapping error $error")
+                callback(ResponseModel.Error(error, error.recoverySuggestion))
+            }
+        )
+    }
+
     fun createAssignment(
         name: String,
         subject: String,
@@ -113,7 +190,7 @@ class DatabaseRepo @Inject constructor(
         date: Date,
         description: String,
         teacherID: String,
-        callback: (ResponseModel<String>) -> Unit
+        callback: (ResponseModel<Assignment>) -> Unit
     ) {
         val assignment = Assignment.builder()
             .teacherId(teacherID)
@@ -131,7 +208,7 @@ class DatabaseRepo @Inject constructor(
             ModelMutation.create(assignment),
             { result ->
                 Timber.i("createAssignment result: $result")
-                callback(ResponseModel.Success("Assignment created in Database!"))
+                callback(ResponseModel.Success(result.data))
             },
             { error ->
                 Timber.e("createAssignment error $error")

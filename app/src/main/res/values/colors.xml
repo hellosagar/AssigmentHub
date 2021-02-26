@@ -11,4 +11,21 @@
     <color name="transparent">#00FFFFFF</color>
     <color name="activity_bg_color">#FDFDFE</color>
     <color name="dark_gray">#2C3D63</color>
+
+    <color name="mustard">#F2C94C</color>
+    <color name="green">#27AE60</color>
+    <color name="purple">#9B51E0</color>
+
+
+    <integer-array name="placeholderColor">
+        <item>@color/blue</item>
+        <item>@color/dark_gray</item>
+        <item>@color/hint_text_color</item>
+        <item>@color/text_gray</item>
+        <item>@color/purple</item>
+        <item>@color/green</item>
+        <item>@color/red</item>
+        <item>@color/mustard</item>
+    </integer-array>
+
 </resources>

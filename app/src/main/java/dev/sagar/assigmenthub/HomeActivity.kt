@@ -1,27 +1,37 @@
 package dev.sagar.assigmenthub
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.hellosagar.assigmenthub.R
 import dev.hellosagar.assigmenthub.databinding.ActivityHomeBinding
+import dev.sagar.assigmenthub.ui.viewmodel.HomeViewModel
+import dev.sagar.assigmenthub.utils.Constants
+import dev.sagar.assigmenthub.utils.getTeacherInfo
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
 
+    private val viewModel: HomeViewModel by viewModels()
+    private lateinit var teacherID: String
+
     @Inject
     lateinit var dataStore: DataStore<Preferences>
-
     private lateinit var binding: ActivityHomeBinding
     private val rotateOpen: Animation by lazy {
         AnimationUtils.loadAnimation(
@@ -57,26 +67,36 @@ class HomeActivity : AppCompatActivity() {
         val bottomNavigationView = binding.bottomNavigationViewHome
         val navController = findNavController(R.id.navFragmentHome)
 
-        bottomNavigationView.setupWithNavController(navController)
-
-        binding.floatingActionButton.setOnClickListener {
-            onAddButtonClicked()
+        lifecycleScope.launch {
+            teacherID = getTeacherInfo(dataStore, Constants.TEACHER_ID)
         }
+
+        val resultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    viewModel.getAssignments(teacherID)
+                }
+            }
+
+        bottomNavigationView.setupWithNavController(navController)
 
         binding.clBg.setOnClickListener {
             onAddButtonClicked()
         }
         binding.clBg.isClickable = false
 
+        binding.floatingActionButton.setOnClickListener {
+            onAddButtonClicked()
+        }
+
         binding.fabAddStudent.setOnClickListener {
             onAddButtonClicked()
-            startActivity(Intent(this, AddAssignmentActivity::class.java))
+            resultLauncher.launch(Intent(this, AddStudentActivity::class.java))
         }
 
         binding.fabAddAssignment.setOnClickListener {
             onAddButtonClicked()
-
-            startActivity(Intent(this, AddAssignmentActivity::class.java))
+            resultLauncher.launch(Intent(this, AddAssignmentActivity::class.java))
         }
     }
 
@@ -85,6 +105,16 @@ class HomeActivity : AppCompatActivity() {
             super.onBackPressed()
         } else {
             onAddButtonClicked()
+        }
+    }
+
+    private fun setBackground(clicked: Boolean) {
+        if (!clicked) {
+            binding.clBg.isClickable = true
+            binding.clBg.setBackgroundColor(ContextCompat.getColor(this, R.color.light_white))
+        } else {
+            binding.clBg.isClickable = false
+            binding.clBg.setBackgroundColor(ContextCompat.getColor(this, R.color.transparent))
         }
     }
 
@@ -137,16 +167,6 @@ class HomeActivity : AppCompatActivity() {
         } else {
             binding.fabAddAssignment.isClickable = false
             binding.fabAddStudent.isClickable = false
-        }
-    }
-
-    private fun setBackground(clicked: Boolean) {
-        if (!clicked) {
-            binding.clBg.isClickable = true
-            binding.clBg.setBackgroundColor(ContextCompat.getColor(this, R.color.light_white))
-        } else {
-            binding.clBg.isClickable = false
-            binding.clBg.setBackgroundColor(ContextCompat.getColor(this, R.color.transparent))
         }
     }
 }

@@ -1,9 +1,16 @@
 package dev.sagar.assigmenthub.ui.fragment
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.amplifyframework.datastore.generated.model.Assignment
 import com.amplifyframework.util.GsonFactory
 import com.google.gson.reflect.TypeToken
@@ -13,35 +20,58 @@ import dev.hellosagar.assigmenthub.R
 import dev.hellosagar.assigmenthub.databinding.FragmentOngoingBinding
 import dev.sagar.assigmenthub.DetailAssignmentActivity
 import dev.sagar.assigmenthub.ui.adapter.AssignmentAdapter
+import dev.sagar.assigmenthub.ui.viewmodel.HomeViewModel
 import dev.sagar.assigmenthub.utils.Constants
 import dev.sagar.assigmenthub.utils.Constants.ASSIGNMENT
+import dev.sagar.assigmenthub.utils.OnDataUpdate
+import dev.sagar.assigmenthub.utils.getTeacherInfo
 import dev.sagar.assigmenthub.utils.visible
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class OnGoingFragment : Fragment(R.layout.fragment_ongoing) {
+class OnGoingFragment : Fragment(R.layout.fragment_ongoing), OnDataUpdate {
 
+    @Inject
+    lateinit var dataStore: DataStore<Preferences>
     private val binding by viewBinding(FragmentOngoingBinding::bind)
+    private lateinit var dataList: MutableList<Assignment>
+    private lateinit var adapter: AssignmentAdapter
+    private lateinit var resultLauncher: ActivityResultLauncher<Intent>
+    private val viewModel: HomeViewModel by activityViewModels()
+    private lateinit var teacherID: String
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val token: TypeToken<List<Assignment>> = object : TypeToken<List<Assignment>>() {}
-        val data: List<Assignment> = GsonFactory.instance()
+        dataList = GsonFactory.instance()
             .fromJson(arguments?.getString(Constants.ON_GOING_ASSIGNMENTS), token.type)
 
-        if (!data.isNullOrEmpty()) {
-            val adapter = AssignmentAdapter(data, onAssignmentClick)
-            binding.rvOnGoingAssignment.setHasFixedSize(true)
+        lifecycleScope.launch {
+            teacherID = getTeacherInfo(dataStore, Constants.TEACHER_ID)
+        }
+
+        if (!dataList.isNullOrEmpty()) {
+            adapter = AssignmentAdapter(dataList, onAssignmentClick)
             binding.rvOnGoingAssignment.adapter = adapter
+            binding.rvOnGoingAssignment.setHasFixedSize(true)
         } else {
             binding.tvNoData.visible()
         }
+
+        resultLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    viewModel.getAssignments(teacherID)
+                }
+            }
     }
 
     private val onAssignmentClick = fun(assignment: Assignment) {
         val intent = Intent(requireContext(), DetailAssignmentActivity::class.java)
         intent.putExtra(ASSIGNMENT, GsonFactory.instance().toJson(assignment))
-        startActivity(intent)
+        resultLauncher.launch(intent)
     }
 
     companion object {
@@ -52,5 +82,11 @@ class OnGoingFragment : Fragment(R.layout.fragment_ongoing) {
             fragment.arguments = bundle
             return fragment
         }
+    }
+
+    override fun onDataUpdate(data: List<Assignment>) {
+        dataList.clear()
+        dataList.addAll(data)
+        adapter.notifyDataSetChanged()
     }
 }

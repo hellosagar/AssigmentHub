@@ -20,7 +20,6 @@ import static com.amplifyframework.core.model.query.predicate.QueryField.field;
 /** This is an auto generated class representing the Assignment type in your schema. */
 @SuppressWarnings("all")
 @ModelConfig(pluralName = "Assignments")
-@Index(name = "teacherIndex", fields = {"teacherID"})
 @Index(name = "byAssignment", fields = {"teacherID"})
 public final class Assignment implements Model {
   public static final QueryField ID = field("Assignment", "id");
@@ -42,7 +41,7 @@ public final class Assignment implements Model {
   private final @ModelField(targetType="Year", isRequired = true) Year year;
   private final @ModelField(targetType="ID", isRequired = true) String branchYearID;
   private final @ModelField(targetType="String", isRequired = true) String description;
-  private final @ModelField(targetType="Student") @HasMany(associatedWith = "branchYearID", type = Student.class) List<Student> students = null;
+  private final @ModelField(targetType="StudentAssignmentMapping") @HasMany(associatedWith = "assignment", type = StudentAssignmentMapping.class) List<StudentAssignmentMapping> students = null;
   private final @ModelField(targetType="AWSDate", isRequired = true) Temporal.Date lastDateSubmission;
   public String getId() {
       return id;
@@ -80,7 +79,7 @@ public final class Assignment implements Model {
       return description;
   }
   
-  public List<Student> getStudents() {
+  public List<StudentAssignmentMapping> getStudents() {
       return students;
   }
   
