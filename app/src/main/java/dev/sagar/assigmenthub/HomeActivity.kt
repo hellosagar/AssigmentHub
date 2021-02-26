@@ -21,6 +21,8 @@ import dev.hellosagar.assigmenthub.databinding.ActivityHomeBinding
 import dev.sagar.assigmenthub.ui.viewmodel.HomeViewModel
 import dev.sagar.assigmenthub.utils.Constants
 import dev.sagar.assigmenthub.utils.getTeacherInfo
+import dev.sagar.assigmenthub.utils.gone
+import dev.sagar.assigmenthub.utils.visible
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -79,6 +81,20 @@ class HomeActivity : AppCompatActivity() {
             }
 
         bottomNavigationView.setupWithNavController(navController)
+
+        bottomNavigationView.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.homeFragment -> {
+                    navController.navigate(R.id.homeFragment)
+                    binding.floatingActionButton.visible()
+                }
+                R.id.profileFragment -> {
+                    navController.navigate(R.id.profileFragment)
+                    binding.floatingActionButton.gone()
+                }
+            }
+            true
+        }
 
         binding.clBg.setOnClickListener {
             onAddButtonClicked()

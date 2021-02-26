@@ -53,7 +53,9 @@ class OnGoingFragment : Fragment(R.layout.fragment_ongoing), OnDataUpdate {
         }
 
         if (!dataList.isNullOrEmpty()) {
-            adapter = AssignmentAdapter(dataList, onAssignmentClick)
+            adapter = AssignmentAdapter(onAssignmentClick)
+            sortListByDate()
+            adapter.submitList(dataList)
             binding.rvOnGoingAssignment.adapter = adapter
             binding.rvOnGoingAssignment.setHasFixedSize(true)
         } else {
@@ -87,6 +89,14 @@ class OnGoingFragment : Fragment(R.layout.fragment_ongoing), OnDataUpdate {
     override fun onDataUpdate(data: List<Assignment>) {
         dataList.clear()
         dataList.addAll(data)
-        adapter.notifyDataSetChanged()
+        sortListByDate()
+        adapter.submitList(dataList)
+    }
+
+    private fun sortListByDate() {
+        dataList.sortBy {
+            it.lastDateSubmission.toDate().time
+        }
+        dataList.reverse()
     }
 }

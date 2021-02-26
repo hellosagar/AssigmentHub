@@ -41,6 +41,17 @@
         <item name="android:layout_height">@dimen/btn_height</item>
     </style>
 
+    <style name="BtnStyleLogout" parent="Widget.MaterialComponents.Button">
+        <item name="backgroundTint">@color/white</item>
+        <item name="cornerRadius">@dimen/btn_radius</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:textColor">@color/red</item>
+        <item name="rippleColor">?attr/colorControlHighlight</item>
+        <item name="android:layout_height">@dimen/btn_height</item>
+        <item name="strokeColor">@color/red</item>
+        <item name="strokeWidth">2dp</item>
+    </style>
+
     <style name="TitleTextStyle">
         <item name="android:textSize">28sp</item>
         <item name="android:textColor">@color/black</item>

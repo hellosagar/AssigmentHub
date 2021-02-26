@@ -2,30 +2,40 @@ package dev.sagar.assigmenthub.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.amplifyframework.datastore.generated.model.Assignment
 import dev.hellosagar.assigmenthub.databinding.ItemAssignmentBinding
 import java.util.Locale
 
 class AssignmentAdapter(
-    private val assignments: List<Assignment>,
     private val onAssignmentClick: (Assignment) -> Unit
-) : RecyclerView.Adapter<AssignmentAdapter.AssignmentViewHolder>() {
+) : ListAdapter<Assignment, AssignmentAdapter.AssignmentViewHolder>(diffCallback) {
+
+    companion object {
+        val diffCallback = object : DiffUtil.ItemCallback<Assignment>() {
+            override fun areItemsTheSame(oldItem: Assignment, newItem: Assignment): Boolean {
+                return oldItem == newItem
+            }
+
+            override fun areContentsTheSame(oldItem: Assignment, newItem: Assignment): Boolean {
+                return oldItem.id == newItem.id
+            }
+        }
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AssignmentViewHolder {
-        val binding = ItemAssignmentBinding.inflate((LayoutInflater.from(parent.context)), parent, false)
+        val binding =
+            ItemAssignmentBinding.inflate((LayoutInflater.from(parent.context)), parent, false)
         return AssignmentViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: AssignmentViewHolder, position: Int) {
-        val currentItem: Assignment = assignments[position]
+        val currentItem: Assignment = getItem(position)
         currentItem.let {
             holder.bind(it, onAssignmentClick)
         }
-    }
-
-    override fun getItemCount(): Int {
-        return assignments.size
     }
 
     class AssignmentViewHolder(private val binding: ItemAssignmentBinding) :

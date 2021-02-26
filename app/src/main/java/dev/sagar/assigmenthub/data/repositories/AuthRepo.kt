@@ -77,4 +77,17 @@ class AuthRepo @Inject constructor(
             }
         )
     }
+
+    fun signOutTeacher(callback: (ResponseModel<String>) -> Unit) {
+        auth.signOut(
+            {
+                Timber.i("signOutTeacher success")
+                callback(ResponseModel.Success("signOutTeacher success"))
+            },
+            { error ->
+                Timber.e("signOutTeacher $error")
+                callback(ResponseModel.Error(error, error.recoverySuggestion))
+            }
+        )
+    }
 }

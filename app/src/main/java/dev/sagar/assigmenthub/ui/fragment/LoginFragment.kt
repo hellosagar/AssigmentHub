@@ -16,7 +16,6 @@ import dev.hellosagar.assigmenthub.databinding.FragmentLoginBinding
 import dev.sagar.assigmenthub.HomeActivity
 import dev.sagar.assigmenthub.ui.viewmodel.LoginViewModel
 import dev.sagar.assigmenthub.utils.ResponseModel
-import dev.sagar.assigmenthub.utils.toast
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -68,7 +67,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                             requireActivity().finish()
                         }
                         is ResponseModel.Error -> {
-                            toast(result.message)
+
                             Timber.i(result.error)
                         }
                     }

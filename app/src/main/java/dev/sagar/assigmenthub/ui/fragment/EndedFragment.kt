@@ -10,6 +10,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.amplifyframework.datastore.generated.model.Assignment
 import com.amplifyframework.util.GsonFactory
 import com.google.gson.reflect.TypeToken
@@ -22,7 +23,9 @@ import dev.sagar.assigmenthub.ui.adapter.AssignmentAdapter
 import dev.sagar.assigmenthub.ui.viewmodel.HomeViewModel
 import dev.sagar.assigmenthub.utils.Constants
 import dev.sagar.assigmenthub.utils.OnDataUpdate
+import dev.sagar.assigmenthub.utils.getTeacherInfo
 import dev.sagar.assigmenthub.utils.visible
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -44,8 +47,14 @@ class EndedFragment : Fragment(R.layout.fragment_ended), OnDataUpdate {
         dataList = GsonFactory.instance()
             .fromJson(arguments?.getString(Constants.ENDED_ASSIGNMENTS), token.type)
 
+        lifecycleScope.launch {
+            teacherID = getTeacherInfo(dataStore, Constants.TEACHER_ID)
+        }
+
         if (!dataList.isNullOrEmpty()) {
-            adapter = AssignmentAdapter(dataList, onAssignmentClick)
+            adapter = AssignmentAdapter(onAssignmentClick)
+            sortListByDate()
+            adapter.submitList(dataList)
             binding.rvEndedAssignment.adapter = adapter
             binding.rvEndedAssignment.setHasFixedSize(true)
         } else {
@@ -78,6 +87,14 @@ class EndedFragment : Fragment(R.layout.fragment_ended), OnDataUpdate {
     override fun onDataUpdate(data: List<Assignment>) {
         dataList.clear()
         dataList.addAll(data)
-        adapter.notifyDataSetChanged()
+        sortListByDate()
+        adapter.submitList(dataList)
+    }
+
+    private fun sortListByDate() {
+        dataList.sortBy {
+            it.lastDateSubmission.toDate().time
+        }
+        dataList.reverse()
     }
 }
