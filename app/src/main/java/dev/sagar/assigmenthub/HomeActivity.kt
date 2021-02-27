@@ -21,8 +21,6 @@ import dev.hellosagar.assigmenthub.databinding.ActivityHomeBinding
 import dev.sagar.assigmenthub.ui.viewmodel.HomeViewModel
 import dev.sagar.assigmenthub.utils.Constants
 import dev.sagar.assigmenthub.utils.getTeacherInfo
-import dev.sagar.assigmenthub.utils.invisible
-import dev.sagar.assigmenthub.utils.visible
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -83,6 +81,7 @@ class HomeActivity : AppCompatActivity() {
         bottomNavigationView.setupWithNavController(navController)
 
 //        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+
 //            if (destination.label?.equals(getString(R.string.home_fragment)) == true) {
 //                binding.floatingActionButton.visible()
 //            } else {
