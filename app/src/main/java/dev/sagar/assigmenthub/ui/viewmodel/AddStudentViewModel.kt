@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.amplifyframework.datastore.generated.model.Branch
+import com.amplifyframework.datastore.generated.model.Status
 import com.amplifyframework.datastore.generated.model.Year
 import dev.sagar.assigmenthub.data.repositories.DatabaseRepo
 import dev.sagar.assigmenthub.utils.Event
@@ -19,7 +20,13 @@ class AddStudentViewModel @ViewModelInject constructor(
     private var _createStudent: MutableLiveData<Event<ResponseModel<String>>> = MutableLiveData()
     var createStudent: LiveData<Event<ResponseModel<String>>> = _createStudent
 
-    fun createStudent(name: String, rollNo: String, branchString: String, yearString: String, email: String) {
+    fun createStudent(
+        name: String,
+        rollNo: String,
+        branchString: String,
+        yearString: String,
+        email: String
+    ) {
         if (!validateInput(name, rollNo, branchString, yearString, email)) {
             return
         }
@@ -29,11 +36,89 @@ class AddStudentViewModel @ViewModelInject constructor(
         databaseRepo.createStudent(
             name, rollNo.toInt(), branch, year, email
         ) { result ->
-            _createStudent.postValue(Event(result))
+            if (result is ResponseModel.Success) {
+                val student = result.response
+                getAllAssignmentsRelatedBranchYearID(student.id, student.branchYearId)
+            } else {
+                _createStudent.postValue(
+                    Event(
+                        ResponseModel.Error(
+                            null,
+                            "Unable to create the Student!"
+                        )
+                    )
+                )
+            }
         }
     }
 
-    private fun validateInput(name: String, rollNo: String, branch: String, year: String, email: String): Boolean {
+    private fun getAllAssignmentsRelatedBranchYearID(studentID: String, branchYearID: String) {
+        var mappingCount = 0
+
+        databaseRepo.getAllAssignmentsSameBranchYearID(
+            branchYearID
+        ) { result ->
+            if (result is ResponseModel.Success) {
+                if (result.response.isEmpty()) {
+                    _createStudent.postValue(
+                        Event(
+                            ResponseModel.Success(
+                                "Student created!"
+                            )
+                        )
+                    )
+                    return@getAllAssignmentsSameBranchYearID
+                }
+
+                for (assignment in result.response) {
+
+                    val status = assignment.status != Status.ONGOING
+
+                    createStudentAssignmentMapping(
+                        studentID, assignment.id, status
+                    ) {
+                        mappingCount++
+                        if (result.response.size == mappingCount) {
+                            _createStudent.postValue(
+                                Event(
+                                    ResponseModel.Success(
+                                        "Student created!"
+                                    )
+                                )
+                            )
+                        }
+                    }
+                }
+            } else {
+                _createStudent.postValue(
+                    Event(
+                        ResponseModel.Error(
+                            null,
+                            "Unable to create the Student!"
+                        )
+                    )
+                )
+            }
+        }
+
+    }
+
+    private fun createStudentAssignmentMapping(
+        studentID: String,
+        assignmentID: String,
+        status: Boolean,
+        callback: (ResponseModel<String>) -> Unit
+    ) {
+        databaseRepo.createStudentAssignmentMapping(studentID, assignmentID, callback, status)
+    }
+
+    private fun validateInput(
+        name: String,
+        rollNo: String,
+        branch: String,
+        year: String,
+        email: String
+    ): Boolean {
 
         if (name.isEmpty()) {
             _createStudent.value = Event(ResponseModel.Error(null, "Name cannot be empty"))

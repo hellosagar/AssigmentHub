@@ -10,6 +10,7 @@ import dev.hellosagar.assigmenthub.databinding.ItemStudentAssignmentBinding
 import dev.sagar.assigmenthub.utils.getShortName
 
 class StudentAssignmentAdapter(
+    private val studentEditable: Boolean,
     private val onClick: (Int, StudentAssignmentMapping) -> Unit
 ) : ListAdapter<StudentAssignmentMapping, StudentAssignmentAdapter.StudentAssignmentViewHolder>(
     differCallback
@@ -45,7 +46,7 @@ class StudentAssignmentAdapter(
     override fun onBindViewHolder(holder: StudentAssignmentViewHolder, position: Int) {
         val currentItem: StudentAssignmentMapping = getItem(position)
         currentItem.let {
-            holder.bind(it, onClick)
+            holder.bind(studentEditable, it, onClick)
         }
     }
 
@@ -53,6 +54,7 @@ class StudentAssignmentAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(
+            studentEditable: Boolean,
             studentAssignmentMapping: StudentAssignmentMapping,
             onClick: (Int, StudentAssignmentMapping) -> Unit
         ) = with(binding) {
@@ -61,8 +63,10 @@ class StudentAssignmentAdapter(
                 tvRollNo.text = studentAssignmentMapping.student.rollNo.toString()
                 tvShortName.text = studentAssignmentMapping.student.name.getShortName()
             }
-            clStudentAssignment.setOnClickListener {
-                onClick.invoke(adapterPosition, studentAssignmentMapping)
+            if (studentEditable) {
+                clStudentAssignment.setOnClickListener {
+                    onClick.invoke(adapterPosition, studentAssignmentMapping)
+                }
             }
         }
     }

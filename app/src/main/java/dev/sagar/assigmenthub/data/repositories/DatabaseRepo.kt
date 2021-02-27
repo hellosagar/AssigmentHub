@@ -75,6 +75,24 @@ class DatabaseRepo @Inject constructor(
         )
     }
 
+    fun getAllAssignmentsSameBranchYearID(
+        branchYearID: String,
+        callback: (ResponseModel<List<Assignment>>) -> Unit
+    ) {
+        api.mutate(
+            ModelQuery.list(Assignment::class.java, Assignment.BRANCH_YEAR_ID.eq(branchYearID)),
+            { result ->
+                Timber.i("getAllAssignmentsSameBranchYearID result: $result")
+                val assignments: List<Assignment> = (result.data.items).toList()
+                callback(ResponseModel.Success(assignments))
+            },
+            { error ->
+                Timber.e("getAllAssignmentsSameBranchYearID error: $error")
+                callback(ResponseModel.Error(error, error.recoverySuggestion))
+            }
+        )
+    }
+
     fun endAssignment(
         assignment: Assignment,
         callback: (ResponseModel<String>) -> Unit
@@ -98,7 +116,7 @@ class DatabaseRepo @Inject constructor(
         branch: Branch,
         year: Year,
         email: String,
-        callback: (ResponseModel<String>) -> Unit
+        callback: (ResponseModel<Student>) -> Unit
     ) {
         val student = Student.builder()
             .name(name)
@@ -113,7 +131,7 @@ class DatabaseRepo @Inject constructor(
             ModelMutation.create(student),
             { result ->
                 Timber.i("createStudent result: $result")
-                callback(ResponseModel.Success("Student created in Database!"))
+                callback(ResponseModel.Success(result.data))
             },
             { error ->
                 Timber.e("createStudent error $error")
@@ -142,11 +160,12 @@ class DatabaseRepo @Inject constructor(
     fun createStudentAssignmentMapping(
         studentID: String,
         assignmentID: String,
-        callback: (ResponseModel<String>) -> Unit
+        callback: (ResponseModel<String>) -> Unit,
+        status: Boolean = false
     ) {
 
         val studentAssignmentMapping = StudentAssignmentMapping.builder()
-            .status(false)
+            .status(status)
             .assignment(Assignment.justId(assignmentID))
             .student(Student.justId(studentID))
             .build()

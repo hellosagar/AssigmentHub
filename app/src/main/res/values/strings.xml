@@ -37,7 +37,7 @@
     <string name="end">End</string>
 
     <string name="students_completed">Students Completed %s</string>
-    <string name="students_uncompleted">Students Completed %s</string>
+    <string name="students_uncompleted">Students Uncompleted %s</string>
     <string name="logout">Logout</string>
 
 </resources>

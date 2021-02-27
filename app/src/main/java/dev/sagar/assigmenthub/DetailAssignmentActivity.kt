@@ -48,12 +48,15 @@ class DetailAssignmentActivity : AppCompatActivity() {
             intent.getStringExtra(ASSIGNMENT),
             Assignment::class.java
         )
+
         binding.tvTitle.text = assignment.name
         binding.tvStatus.text = assignment.status.toString()
+        binding.tvBranch.text = assignment.branch.toString()
         binding.tvYear.text = assignment.year.toString()
         binding.tvSubject.text = assignment.subject.toString()
         binding.tvDescription.text = assignment.description
 
+        val studentEditable = assignment.status == Status.ONGOING
         if (assignment.status == Status.ONGOING) {
             binding.tvEndAssignment.visible()
         }
@@ -66,9 +69,11 @@ class DetailAssignmentActivity : AppCompatActivity() {
         uncompletedStudentsList = viewModel.getUncompletedStudentsList(assignment)
         completedStudentsList = viewModel.getCompletedStudentsList(assignment)
 
-        completedStudentsAdapter = StudentAssignmentAdapter(onCompletedStudentClick)
+        completedStudentsAdapter =
+            StudentAssignmentAdapter(studentEditable, onCompletedStudentClick)
         completedStudentsAdapter.submitList(completedStudentsList)
-        unCompletedStudentsAdapter = StudentAssignmentAdapter(onUncompletedStudentClick)
+        unCompletedStudentsAdapter =
+            StudentAssignmentAdapter(studentEditable, onUncompletedStudentClick)
         unCompletedStudentsAdapter.submitList(uncompletedStudentsList)
 
         completedStudentSize = completedStudentsList.size

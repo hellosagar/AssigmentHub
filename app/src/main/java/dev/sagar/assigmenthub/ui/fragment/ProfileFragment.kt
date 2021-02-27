@@ -1,5 +1,6 @@
 package dev.sagar.assigmenthub.ui.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.datastore.core.DataStore
@@ -14,6 +15,7 @@ import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import dev.hellosagar.assigmenthub.R
 import dev.hellosagar.assigmenthub.databinding.FragmentProfileBinding
+import dev.sagar.assigmenthub.AuthActivity
 import dev.sagar.assigmenthub.ui.viewmodel.ProfileViewModel
 import dev.sagar.assigmenthub.utils.Constants
 import dev.sagar.assigmenthub.utils.ResponseModel
@@ -73,6 +75,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             dataStore.edit { dataStoreEdit ->
                 dataStoreEdit.clear()
             }
+            startActivity(Intent(requireActivity(), AuthActivity::class.java))
             requireActivity().finish()
         }
     }

@@ -19,10 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.hellosagar.assigmenthub.R
 import dev.hellosagar.assigmenthub.databinding.ActivityHomeBinding
 import dev.sagar.assigmenthub.ui.viewmodel.HomeViewModel
-import dev.sagar.assigmenthub.utils.Constants
-import dev.sagar.assigmenthub.utils.getTeacherInfo
-import dev.sagar.assigmenthub.utils.gone
-import dev.sagar.assigmenthub.utils.visible
+import dev.sagar.assigmenthub.utils.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -90,7 +87,7 @@ class HomeActivity : AppCompatActivity() {
                 }
                 R.id.profileFragment -> {
                     navController.navigate(R.id.profileFragment)
-                    binding.floatingActionButton.gone()
+                    binding.floatingActionButton.invisible()
                 }
             }
             true

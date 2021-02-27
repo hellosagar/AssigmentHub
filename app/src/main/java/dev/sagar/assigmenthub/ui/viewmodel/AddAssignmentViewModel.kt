@@ -41,6 +41,7 @@ class AddAssignmentViewModel @ViewModelInject constructor(
             return
         }
         val year = Year.valueOf(yearString)
+
         val branch = Branch.valueOf(branchString)
         val date = Date()
 
@@ -67,43 +68,40 @@ class AddAssignmentViewModel @ViewModelInject constructor(
     }
 
     private fun getAllStudentWithBranchYear(assignment: Assignment) {
-
         var mappingCount = 0
+        val branchYearID = assignment.branchYearId
 
-        viewModelScope.launch {
-            val branchYearID = assignment.branchYearId
-
-            databaseRepo.getStudentsFromBranchYearID(
-                branchYearID
-            ) { result ->
-                if (result is ResponseModel.Success) {
-                    for (student in result.response) {
-                        createStudentAssignmentMapping(
-                            student.id, assignment.id
-                        ) {
-                            mappingCount++
-                            if (result.response.size == mappingCount) {
-                                _createAssignment.postValue(
-                                    Event(
-                                        ResponseModel.Success(
-                                            "Assignment created!"
-                                        )
+        databaseRepo.getStudentsFromBranchYearID(
+            branchYearID
+        ) { result ->
+            if (result is ResponseModel.Success) {
+                for (student in result.response) {
+                    createStudentAssignmentMapping(
+                        student.id, assignment.id
+                    ) {
+                        mappingCount++
+                        if (result.response.size == mappingCount) {
+                            _createAssignment.postValue(
+                                Event(
+                                    ResponseModel.Success(
+                                        "Assignment created!"
                                     )
                                 )
-                            }
+                            )
                         }
                     }
-                } else {
-                    _createAssignment.postValue(
-                        Event(
-                            ResponseModel.Error(
-                                null,
-                                "Unable to create the Assignment!"
-                            )
+                }
+            } else {
+                _createAssignment.postValue(
+                    Event(
+                        ResponseModel.Error(
+                            null,
+                            "Unable to create the Assignment!"
                         )
                     )
-                }
+                )
             }
+
         }
     }
 

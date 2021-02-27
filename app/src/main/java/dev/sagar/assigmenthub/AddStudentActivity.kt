@@ -1,5 +1,6 @@
 package dev.sagar.assigmenthub
 
+import android.app.Activity
 import android.os.Bundle
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
@@ -56,6 +57,7 @@ class AddStudentActivity : AppCompatActivity() {
                         is ResponseModel.Success -> {
                             toast("Student Added!")
                             Timber.i(result.response)
+                            setResult(Activity.RESULT_OK)
                             finish()
                         }
                         is ResponseModel.Error -> {
