@@ -35,12 +35,7 @@ class AddAssignmentViewModel @ViewModelInject constructor(
         description: String
     ) {
         if (!validateInput(
-                name,
-                subject,
-                branchString,
-                yearString,
-                lastSubmissionDateString,
-                description
+                name, subject, branchString, yearString, lastSubmissionDateString, description
             )
         ) {
             return
