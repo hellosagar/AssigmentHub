@@ -51,3 +51,9 @@ app/src/main/java/com/sagar/assigmenthub/adapters/
 app/src/main/java/com/sagar/assigmenthub/data/
 app/src/test/
 package-lock.json
+google-services.json
+release/
+src/main/java/dev/amplifyframework/
+src/main/java/dev/sagar/assigmenthub/data/entities/
+src/main/java/dev/sagar/assigmenthub/data/remote/
+src/main/res/mipmap-anydpi-v26/
