@@ -81,7 +81,6 @@ class HomeActivity : AppCompatActivity() {
         bottomNavigationView.setupWithNavController(navController)
 
 //        navController.addOnDestinationChangedListener { controller, destination, arguments ->
-
 //            if (destination.label?.equals(getString(R.string.home_fragment)) == true) {
 //                binding.floatingActionButton.visible()
 //            } else {
