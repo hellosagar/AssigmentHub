@@ -10,7 +10,7 @@
 
     <dimen name="edit_text_corner_radius">12dp</dimen>
 
-    <dimen name="btn_height">70dp</dimen>
+    <dimen name="btn_height">60dp</dimen>
 
     <dimen name="margin_start">24dp</dimen>
     <dimen name="margin_end">24dp</dimen>

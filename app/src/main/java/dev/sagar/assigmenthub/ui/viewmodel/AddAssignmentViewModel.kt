@@ -40,6 +40,9 @@ class AddAssignmentViewModel @ViewModelInject constructor(
         ) {
             return
         }
+
+        _createAssignment.postValue(Event(ResponseModel.Loading()))
+
         val year = Year.valueOf(yearString)
 
         val branch = Branch.valueOf(branchString)

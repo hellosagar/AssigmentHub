@@ -12,7 +12,9 @@ import com.amplifyframework.datastore.generated.model.Year
 import dagger.hilt.android.AndroidEntryPoint
 import dev.hellosagar.assigmenthub.R
 import dev.hellosagar.assigmenthub.databinding.ActivityAddStudentBinding
+import dev.hellosagar.assigmenthub.databinding.ProgressButtonLayoutBinding
 import dev.sagar.assigmenthub.ui.viewmodel.AddStudentViewModel
+import dev.sagar.assigmenthub.utils.ProgressButton
 import dev.sagar.assigmenthub.utils.ResponseModel
 import dev.sagar.assigmenthub.utils.toast
 import timber.log.Timber
@@ -22,12 +24,16 @@ class AddStudentActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddStudentBinding
     private val viewModel: AddStudentViewModel by viewModels()
+    private lateinit var progressView: ProgressButtonLayoutBinding
+    private lateinit var progressButton: ProgressButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_student)
         binding = ActivityAddStudentBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        progressView = binding.btnSubmit
+        progressButton = ProgressButton(this, progressView, getString(R.string.submit))
 
         initBranchDropdown()
         initYearDropdown()
@@ -36,7 +42,7 @@ class AddStudentActivity : AppCompatActivity() {
             finish()
         }
 
-        binding.btnSubmit.setOnClickListener {
+        progressView.cvProgressButton.setOnClickListener {
             val name = binding.tietName.text.toString()
             val rollNo = binding.tietRollNo.text.toString()
             val branch = binding.actBranch.text.toString()
@@ -53,16 +59,19 @@ class AddStudentActivity : AppCompatActivity() {
                     when (result) {
                         is ResponseModel.Loading -> {
                             Timber.i("Loading")
+                            progressButton.btnActivated(getString(R.string.please_wait))
                         }
                         is ResponseModel.Success -> {
                             toast("Student Added!")
                             Timber.i(result.response)
+                            progressButton.btnFinished(getString(R.string.done))
                             setResult(Activity.RESULT_OK)
                             finish()
                         }
                         is ResponseModel.Error -> {
                             toast(result.message)
                             Timber.i(result.error)
+                            progressButton.btnReset()
                         }
                     }
                 }

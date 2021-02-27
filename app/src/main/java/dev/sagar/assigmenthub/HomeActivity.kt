@@ -19,7 +19,10 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.hellosagar.assigmenthub.R
 import dev.hellosagar.assigmenthub.databinding.ActivityHomeBinding
 import dev.sagar.assigmenthub.ui.viewmodel.HomeViewModel
-import dev.sagar.assigmenthub.utils.*
+import dev.sagar.assigmenthub.utils.Constants
+import dev.sagar.assigmenthub.utils.getTeacherInfo
+import dev.sagar.assigmenthub.utils.invisible
+import dev.sagar.assigmenthub.utils.visible
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -79,19 +82,13 @@ class HomeActivity : AppCompatActivity() {
 
         bottomNavigationView.setupWithNavController(navController)
 
-        bottomNavigationView.setOnNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.homeFragment -> {
-                    navController.navigate(R.id.homeFragment)
-                    binding.floatingActionButton.visible()
-                }
-                R.id.profileFragment -> {
-                    navController.navigate(R.id.profileFragment)
-                    binding.floatingActionButton.invisible()
-                }
-            }
-            true
-        }
+//        navController.addOnDestinationChangedListener { controller, destination, arguments ->
+//            if (destination.label?.equals(getString(R.string.home_fragment)) == true) {
+//                binding.floatingActionButton.visible()
+//            } else {
+//                binding.floatingActionButton.invisible()
+//            }
+//        }
 
         binding.clBg.setOnClickListener {
             onAddButtonClicked()

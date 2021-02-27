@@ -137,14 +137,13 @@
             android:singleLine="true" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.button.MaterialButton
+    <include
         android:id="@+id/btnSubmit"
-        style="@style/BtnStyle"
+        layout="@layout/progress_button_layout"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="@string/submit"
         app:layout_constraintEnd_toEndOf="@+id/textInputLayoutEmail"
-        app:layout_constraintHorizontal_bias="0.464"
         app:layout_constraintStart_toStartOf="@+id/textInputLayoutEmail"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEmail" />
 

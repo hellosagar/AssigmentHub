@@ -158,12 +158,12 @@
             android:inputType="textMultiLine" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnSignUp"
-        style="@style/BtnStyle"
+    <include
+        android:id="@+id/btnSubmit"
+        layout="@layout/progress_button_layout"
         android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="@string/submit"
         app:layout_constraintEnd_toEndOf="@+id/textInputLayoutDescription"
         app:layout_constraintStart_toStartOf="@+id/textInputLayoutDescription"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayoutDescription" />

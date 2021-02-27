@@ -31,6 +31,8 @@ class AddStudentViewModel @ViewModelInject constructor(
             return
         }
 
+        _createStudent.postValue(Event(ResponseModel.Loading()))
+
         val year = Year.valueOf(yearString)
         val branch = Branch.valueOf(branchString)
         databaseRepo.createStudent(

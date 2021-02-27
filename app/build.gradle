@@ -4,6 +4,8 @@ plugins {
     id 'kotlin-android-extensions'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
@@ -105,6 +107,10 @@ dependencies {
     implementation 'com.amplifyframework:aws-datastore:1.16.13'
     implementation 'com.amplifyframework:aws-auth-cognito:1.16.13'
 
+    //Firebase
+    implementation platform('com.google.firebase:firebase-bom:26.5.0')
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-analytics'
 
 }
 apply plugin: "androidx.navigation.safeargs"

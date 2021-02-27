@@ -16,7 +16,9 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
 import dev.hellosagar.assigmenthub.R
 import dev.hellosagar.assigmenthub.databinding.ActivityAddAssignmentBinding
+import dev.hellosagar.assigmenthub.databinding.ProgressButtonLayoutBinding
 import dev.sagar.assigmenthub.ui.viewmodel.AddAssignmentViewModel
+import dev.sagar.assigmenthub.utils.ProgressButton
 import dev.sagar.assigmenthub.utils.ResponseModel
 import dev.sagar.assigmenthub.utils.getFormattedDate
 import dev.sagar.assigmenthub.utils.toast
@@ -29,12 +31,16 @@ class AddAssignmentActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddAssignmentBinding
     private val viewModel: AddAssignmentViewModel by viewModels()
+    private lateinit var progressView: ProgressButtonLayoutBinding
+    private lateinit var progressButton: ProgressButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddAssignmentBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        progressView = binding.btnSubmit
+        progressButton = ProgressButton(this, progressView, getString(R.string.submit))
         binding.tietLastSubmissionDate.setTextIsSelectable(false)
 
         initBranchDropdown()
@@ -55,7 +61,7 @@ class AddAssignmentActivity : AppCompatActivity() {
                 }
             }
 
-        binding.btnSignUp.setOnClickListener {
+        progressView.cvProgressButton.setOnClickListener {
             val name = binding.tietName.text.toString()
             val subject = binding.tietSubject.text.toString()
             val branch = binding.actBranch.text.toString()
@@ -73,16 +79,19 @@ class AddAssignmentActivity : AppCompatActivity() {
                     when (result) {
                         is ResponseModel.Loading -> {
                             Timber.i("Loading")
+                            progressButton.btnActivated(getString(R.string.please_wait))
                         }
                         is ResponseModel.Success -> {
                             toast("Assignment Added!")
                             Timber.i(result.response)
+                            progressButton.btnFinished(getString(R.string.done))
                             setResult(Activity.RESULT_OK)
                             finish()
                         }
                         is ResponseModel.Error -> {
                             toast(result.message)
                             Timber.i(result.error)
+                            progressButton.btnReset()
                         }
                     }
                 }

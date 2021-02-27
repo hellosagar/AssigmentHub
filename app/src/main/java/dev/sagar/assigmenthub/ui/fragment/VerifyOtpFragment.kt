@@ -12,8 +12,10 @@ import com.zhuinden.fragmentviewbindingdelegatekt.viewBinding
 import dagger.hilt.android.AndroidEntryPoint
 import dev.hellosagar.assigmenthub.R
 import dev.hellosagar.assigmenthub.databinding.FragmentVerifyOtpBinding
+import dev.hellosagar.assigmenthub.databinding.ProgressButtonLayoutBinding
 import dev.sagar.assigmenthub.HomeActivity
 import dev.sagar.assigmenthub.ui.viewmodel.VerifyOtpViewModel
+import dev.sagar.assigmenthub.utils.ProgressButton
 import dev.sagar.assigmenthub.utils.ResponseModel
 import dev.sagar.assigmenthub.utils.toast
 import timber.log.Timber
@@ -27,15 +29,20 @@ class VerifyOtpFragment : Fragment(R.layout.fragment_verify_otp) {
     private lateinit var email: String
     private lateinit var password: String
     private lateinit var name: String
+    private lateinit var progressView: ProgressButtonLayoutBinding
+    private lateinit var progressButton: ProgressButton
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        progressView = binding.btnVerify
+        progressButton = ProgressButton(requireContext(), progressView, getString(R.string.verify))
 
         binding.ivBack.setOnClickListener {
             findNavController().popBackStack()
         }
 
-        binding.btnVerify.setOnClickListener {
+        progressView.cvProgressButton.setOnClickListener {
             val otp = binding.tietOtp.text.toString()
             email = args.email
             password = args.password
@@ -50,6 +57,7 @@ class VerifyOtpFragment : Fragment(R.layout.fragment_verify_otp) {
                     when (result) {
                         is ResponseModel.Loading -> {
                             Timber.i("Loading")
+                            progressButton.btnActivated(getString(R.string.please_wait))
                         }
                         is ResponseModel.Success -> {
                             viewModel.loginTeacher(email, password)
@@ -57,6 +65,7 @@ class VerifyOtpFragment : Fragment(R.layout.fragment_verify_otp) {
                         is ResponseModel.Error -> {
                             toast(result.message)
                             Timber.i(result.error)
+                            progressButton.btnReset()
                         }
                     }
                 }
@@ -78,6 +87,7 @@ class VerifyOtpFragment : Fragment(R.layout.fragment_verify_otp) {
                         is ResponseModel.Error -> {
                             toast(result.message)
                             Timber.i(result.error)
+                            progressButton.btnReset()
                         }
                     }
                 }
@@ -94,6 +104,7 @@ class VerifyOtpFragment : Fragment(R.layout.fragment_verify_otp) {
                         }
                         is ResponseModel.Success -> {
                             Timber.i(result.message)
+                            progressButton.btnFinished(getString(R.string.done))
                             requireActivity().startActivity(
                                 Intent(
                                     requireActivity(),
@@ -105,6 +116,7 @@ class VerifyOtpFragment : Fragment(R.layout.fragment_verify_otp) {
                         is ResponseModel.Error -> {
                             toast(result.message)
                             Timber.i(result.error)
+                            progressButton.btnReset()
                         }
                     }
                 }

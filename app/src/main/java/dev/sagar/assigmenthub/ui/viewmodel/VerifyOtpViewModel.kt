@@ -39,8 +39,6 @@ class VerifyOtpViewModel @ViewModelInject constructor(
 
     fun loginTeacher(email: String, password: String) {
 
-        _loginTeacher.postValue(Event((ResponseModel.Loading())))
-
         authRepo.signInTeacher(
             email,
             password
@@ -53,6 +51,8 @@ class VerifyOtpViewModel @ViewModelInject constructor(
         if (!validateInput(otp)) {
             return
         }
+
+        _verifyTeacher.postValue(Event((ResponseModel.Loading())))
 
         authRepo.confirmTeacher(
             email, otp

@@ -21,6 +21,8 @@ class RegisterViewModel @ViewModelInject constructor(
             return
         }
 
+        _createTeacher.postValue(Event(ResponseModel.Loading()))
+
         authRepo.signUpTeacher(
             email, name, password
         ) { result ->
@@ -56,7 +58,8 @@ class RegisterViewModel @ViewModelInject constructor(
         }
 
         if (confirmPassword.isEmpty()) {
-            _createTeacher.value = Event(ResponseModel.Error(null, "Confirm password cannot be empty"))
+            _createTeacher.value =
+                Event(ResponseModel.Error(null, "Confirm password cannot be empty"))
             return false
         }
 

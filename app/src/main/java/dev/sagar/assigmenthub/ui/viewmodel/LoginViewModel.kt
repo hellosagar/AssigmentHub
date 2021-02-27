@@ -28,7 +28,6 @@ class LoginViewModel @ViewModelInject constructor(
     var loginUser: LiveData<Event<ResponseModel<String>>> = _loginUser
 
     fun loginUser(email: String, password: String) {
-
         if (!validateInput(email, password)) {
             return
         }
@@ -39,7 +38,11 @@ class LoginViewModel @ViewModelInject constructor(
             email,
             password
         ) { result ->
-            getTeacher((result as ResponseModel.Success).response, email)
+            if (result is ResponseModel.Success) {
+                getTeacher(result.response, email)
+            } else if (result is ResponseModel.Error) {
+                _loginUser.postValue(Event(ResponseModel.Error(result.error, result.message)))
+            }
         }
     }
 

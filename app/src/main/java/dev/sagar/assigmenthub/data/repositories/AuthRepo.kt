@@ -53,7 +53,7 @@ class AuthRepo @Inject constructor(
             },
             { error ->
                 Timber.e("signInTeacher $error) ")
-                callback(ResponseModel.Error(null, error.recoverySuggestion))
+                callback(ResponseModel.Error(error, error.recoverySuggestion))
             }
         )
     }

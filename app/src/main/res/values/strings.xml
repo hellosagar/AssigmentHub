@@ -36,8 +36,14 @@
     <string name="end_assignment">End Assignment</string>
     <string name="end">End</string>
 
+    <string name="home_fragment">HomeFragment</string>
+    <string name="profile_fragment">ProfileFragment</string>
+
     <string name="students_completed">Students Completed %s</string>
     <string name="students_uncompleted">Students Uncompleted %s</string>
     <string name="logout">Logout</string>
+    <string name="signup">Sign Up</string>
+    <string name="done">Done</string>
+    <string name="please_wait">Please wait..</string>
 
 </resources>
