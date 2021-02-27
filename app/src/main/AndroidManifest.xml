@@ -12,20 +12,29 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="dev.sagar.assigmenthub.DetailAssignmentActivity" />
-        <activity android:name="dev.sagar.assigmenthub.AddStudentActivity" />
-        <activity android:name="dev.sagar.assigmenthub.AddAssignmentActivity" />
+        <activity
+            android:name="dev.sagar.assigmenthub.DetailAssignmentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="dev.sagar.assigmenthub.AddStudentActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="dev.sagar.assigmenthub.AddAssignmentActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name="dev.sagar.assigmenthub.AuthActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden"
-            android:theme="@style/AppTheme.Splash">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.Splash"
+            android:windowSoftInputMode="adjustResize|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="dev.sagar.assigmenthub.HomeActivity" />
+        <activity
+            android:name="dev.sagar.assigmenthub.HomeActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
