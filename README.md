@@ -1,3 +1,5 @@
+![GitHub Cards Preview](https://github.com/hellosagar/AssigmentHub/blob/main/screenshots/banner_bg.png?raw=true)
+
 # AssigmentHub
 Android app to manage assignments for teachers in college.
 
