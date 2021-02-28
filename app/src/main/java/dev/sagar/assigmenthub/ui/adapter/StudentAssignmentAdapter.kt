@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.amplifyframework.datastore.generated.model.StudentAssignmentMapping
 import dev.hellosagar.assigmenthub.databinding.ItemStudentAssignmentBinding
 import dev.sagar.assigmenthub.utils.getShortName
-import java.util.*
+import java.util.Locale
 
 class StudentAssignmentAdapter(
     private val studentEditable: Boolean,
@@ -61,7 +61,7 @@ class StudentAssignmentAdapter(
         ) = with(binding) {
             if (studentAssignmentMapping.student != null) {
                 tvStudentName.text = studentAssignmentMapping.student.name
-                tvRollNo.text =  "Roll No. " + studentAssignmentMapping.student.rollNo.toString()
+                tvRollNo.text = "Roll No. " + studentAssignmentMapping.student.rollNo.toString()
                 tvShortName.text = studentAssignmentMapping.student.name.getShortName()
                     .toUpperCase(Locale.getDefault())
             }

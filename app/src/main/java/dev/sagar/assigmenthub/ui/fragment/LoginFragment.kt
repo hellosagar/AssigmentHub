@@ -21,7 +21,6 @@ import dev.sagar.assigmenthub.utils.ResponseModel
 import dev.sagar.assigmenthub.utils.toast
 import timber.log.Timber
 
-
 @AndroidEntryPoint
 class LoginFragment : Fragment(R.layout.fragment_login) {
 
@@ -29,7 +28,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     private val viewModel: LoginViewModel by viewModels()
     private lateinit var loginView: ProgressButtonLayoutBinding
     private lateinit var progressButton: ProgressButton
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -51,7 +49,8 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         }
 
         binding.clParentLogin.setOnClickListener {
-            val imm: InputMethodManager = requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+            val imm: InputMethodManager =
+                requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
 
