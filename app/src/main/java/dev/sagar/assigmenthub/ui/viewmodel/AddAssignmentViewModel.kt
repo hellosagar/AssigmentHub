@@ -104,7 +104,6 @@ class AddAssignmentViewModel @ViewModelInject constructor(
                     )
                 )
             }
-
         }
     }
 

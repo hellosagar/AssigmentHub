@@ -102,7 +102,6 @@ class AddStudentViewModel @ViewModelInject constructor(
                 )
             }
         }
-
     }
 
     private fun createStudentAssignmentMapping(

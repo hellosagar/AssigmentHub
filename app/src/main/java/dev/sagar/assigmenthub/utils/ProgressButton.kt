@@ -1,7 +1,6 @@
 package dev.sagar.assigmenthub.utils
 
 import android.content.Context
-import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ProgressBar
@@ -37,7 +36,12 @@ class ProgressButton(
     }
 
     fun btnFinished(text: String) {
-        innerClProgressButton.setBackgroundColor(ContextCompat.getColor(cardView.context, R.color.green))
+        innerClProgressButton.setBackgroundColor(
+            ContextCompat.getColor(
+                cardView.context,
+                R.color.green
+            )
+        )
         textView.text = text
         progressBar.invisible()
     }
@@ -46,6 +50,4 @@ class ProgressButton(
         textView.text = btnText
         progressBar.invisible()
     }
-
-
 }

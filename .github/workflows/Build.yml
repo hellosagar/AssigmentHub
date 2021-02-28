@@ -21,6 +21,11 @@ jobs:
           FIREBASE_SECRET: ${{ secrets.FIREBASE_SECRET }}
         run: echo $FIREBASE_SECRET > app/google-services.json
 
+      - name: Decode google-services.json
+        env:
+        FIREBASE_SECRET: ${{ secrets.FIREBASE_SECRET }}
+        run: echo $FIREBASE_SECRET > YOUR_PROJECT_FOLDER/app/google-services.json
+
       # Cache gradle
       - name: Cache Gradle and wrapper
         uses: actions/cache@v2
