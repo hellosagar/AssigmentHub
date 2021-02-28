@@ -38,7 +38,6 @@ class VerifyOtpViewModel @ViewModelInject constructor(
     var createTeacher: LiveData<Event<ResponseModel<GraphQLResponse<Teacher>>>> = _createTeacher
 
     fun loginTeacher(email: String, password: String) {
-
         authRepo.signInTeacher(
             email,
             password
