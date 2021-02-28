@@ -2,8 +2,8 @@
 Android app to manage assignments for teachers in college.
 
 
-[![Build](https://github.com/hellosagar/AssigmentHub/workflows/Build/badge.svg?branch=master)](https://github.com/hellosagar/AssigmentHub/actions?query=workflow%3ABuild)
-[![Lint](https://github.com/hellosagar/AssigmentHub/workflows/Lint/badge.svg?branch=master)](https://github.com/hellosagar/AssigmentHub/actions?query=workflow%3ALint)
+[![Build](https://github.com/hellosagar/AssigmentHub/workflows/Build/badge.svg?branch=main)](https://github.com/hellosagar/AssigmentHub/actions?query=workflow%3ABuild)
+[![Lint](https://github.com/hellosagar/AssigmentHub/workflows/Lint/badge.svg?branch=main)](https://github.com/hellosagar/AssigmentHub/actions?query=workflow%3ALint)
 
 [![GitHub license](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![ktlint](https://img.shields.io/badge/code%20style-%E2%9D%A4-FF4081.svg)](https://ktlint.github.io/)
