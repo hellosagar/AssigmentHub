@@ -22,6 +22,29 @@ Android app to manage assignments for teachers in college.
 ## About
 It simply manges **assignments**
 
+## ⚙️ Features
+* Login: Allow the teachers to login in
+* SignUp: Allow the teachers to sign up
+* Verify OTP: Verify the email entered by the teacher on sign up
+* Home: Shows the OnGoing and the ended assignment
+* Add Student: Add student in the DynamoDB database
+* Add Assignment: Assign assignment to the student
+* Profile: This allows the teacher to see the profile info
+* Detail of Assignment: Show the detailed info about the assignment and allow the teacher to change the student assignment status
+
+## 🚀 Technology Used
+
+* AssignmentHub built using Kotlin
+* DynamoDB as Database
+
+## 📸 Screenshots
+
+||||
+|:----------------------------------------:|:-----------------------------------------:|:-----------------------------------------: |
+| ![Imgur](screenshots/1.jpg) | ![Imgur](screenshots/2.jpg) | ![Imgur](screenshots/3.jpg) |
+| ![Imgur](screenshots/4.jpg) | ![Imgur](screenshots/5.jpg) | ![Imgur](screenshots/6.jpg) |
+| ![Imgur](screenshots/7.jpg) | ![Imgur](screenshots/8.jpg) |
+
 ## Built With 🛠
 - [Kotlin](https://kotlinlang.org/) - First class and official programming language for Android development.
 - [Android Architecture Components](https://developer.android.com/topic/libraries/architecture) - Collection of libraries that help you design robust, testable, and maintainable apps.
@@ -32,6 +55,10 @@ It simply manges **assignments**
   - [Hilt-Dagger](https://dagger.dev/hilt/) - Standard library to incorporate Dagger dependency injection into an Android application.
   - [Hilt-ViewModel](https://developer.android.com/training/dependency-injection/hilt-jetpack) - DI for injecting `ViewModel`.
 - [Material Components for Android](https://github.com/material-components/material-components-android) - Modular and customizable Material Design UI components for Android.
+- [AWS Amplify](https://docs.amplify.aws/) - A set of tools and services that can be used together or on their own, to help front-end web and mobile developers build scalable full stack applications, powered by AWS.
+- [GraphQL](https://graphql.org/) - GraphQL is an open-source data query and manipulation language for APIs, and a runtime for fulfilling queries with existing data
+- [AWS AppSync](https://aws.amazon.com/appsync/) - Accelerate application development with scalable GraphQL APIs
+- [Amazon DynamoDB](https://aws.amazon.com/dynamodb/) - Amazon DynamoDB is a key-value and document database that delivers single-digit millisecond performance at any scale.
 
 # Package Structure
     
