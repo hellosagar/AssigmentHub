@@ -43,7 +43,6 @@ class AddAssignmentViewModel @ViewModelInject constructor(
         val year = Year.valueOf(yearString)
         val branch = Branch.valueOf(branchString)
         val date = Date()
-
         viewModelScope.launch {
             val teacherID = getTeacherInfo(dataStore, Constants.TEACHER_ID)
 
