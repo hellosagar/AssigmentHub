@@ -1,0 +1,67 @@
+type Teacher @model
+{
+    id: ID!
+    name: String!
+    email: String!
+    assignments: [Assignment] @connection(keyName: "byAssignment",fields: ["id"])
+}
+
+type Assignment @model
+@key(name: "byAssignment", fields: ["teacherID"])
+{
+    id: ID!
+    teacherID: ID!
+    name: String!
+    subject: String!
+    status: Status!
+    branch: Branch!
+    year: Year!
+    branchYearID: ID!
+    description: String!
+    students : [StudentAssignmentMapping] @connection(keyName: "byAssignmentID",fields: ["id"])
+    lastDateSubmission: AWSDate!
+}
+
+type StudentAssignmentMapping @model
+@key(fields: ["studentID", "assignmentID"])
+@key(name: "byAssignmentID", fields: ["assignmentID"])
+@key(name: "byStudentID", fields: ["studentID"])
+{
+    id: ID!
+    studentID: ID!
+    assignmentID: ID!
+    status: Boolean!
+    student: Student @connection (fields: ["studentID"])
+    assignment: Assignment @connection (fields: ["assignmentID"])
+}
+
+type Student @model
+@key(name: "byStudent", fields: ["branchYearID"])
+{
+    id: ID!
+    name: String!
+    rollNo: Int!
+    branch: Branch!
+    year: Year!
+    branchYearID: ID!
+    email: String!
+    assignments : [StudentAssignmentMapping] @connection(keyName: "byStudentID",fields: ["id"])
+}
+
+enum Branch{
+    BCA,
+    Btech,
+    BBA
+}
+
+enum Year{
+    FIRST,
+    SECOND,
+    THIRD,
+    FOURTH
+}
+
+enum Status{
+    ONGOING,
+    ENDED,
+}
