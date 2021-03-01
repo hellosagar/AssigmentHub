@@ -21,9 +21,6 @@ Android app to manage assignments for teachers in college.
 
 [![AssigmentHub App](https://img.shields.io/badge/AssigmentHub✅-APK-red.svg?style=for-the-badge&logo=android)](https://github.com/hellosagar/AssigmentHub/releases/latest/download/app.apk)
 
-## About
-It simply manges **assignments**
-
 ## ⚙️ Features
 * Login: Allow the teachers to login in
 * SignUp: Allow the teachers to sign up
