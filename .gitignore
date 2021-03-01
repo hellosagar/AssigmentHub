@@ -37,6 +37,7 @@ amplify/.config/project-config.json
 amplify/README.md
 amplify/backend/api/amplifyDatasource/parameters.json
 amplify/backend/api/amplifyDatasource/schema.graphql
+amplify/backend/api/sampleapi/schema/schema.graphql
 amplify/backend/api/amplifyDatasource/stacks/
 amplify/backend/api/amplifyDatasource/transform.conf.json
 amplify/backend/auth/
@@ -57,3 +58,11 @@ src/main/java/dev/amplifyframework/
 src/main/java/dev/sagar/assigmenthub/data/entities/
 src/main/java/dev/sagar/assigmenthub/data/remote/
 src/main/res/mipmap-anydpi-v26/
+amplify/backend/api/sampleapi/parameters.json
+amplify/backend/api/sampleapi/resolvers/
+amplify/backend/api/sampleapi/stacks/
+amplify/backend/api/sampleapi/transform.conf.json
+app/src/main/java/dev/amplifyframework/
+app/src/main/java/dev/sagar/assigmenthub/data/entities/
+app/src/main/java/dev/sagar/assigmenthub/data/remote/
+app/src/main/res/mipmap-anydpi-v26/
