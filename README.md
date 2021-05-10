@@ -3,16 +3,11 @@
 # AssigmentHub
 Android app to manage assignments for teachers in college.
 
-
 [![Build](https://github.com/hellosagar/AssigmentHub/workflows/Build/badge.svg?branch=main)](https://github.com/hellosagar/AssigmentHub/actions?query=workflow%3ABuild)
 [![Lint](https://github.com/hellosagar/AssigmentHub/workflows/Lint/badge.svg?branch=main)](https://github.com/hellosagar/AssigmentHub/actions?query=workflow%3ALint)
 
 [![GitHub license](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![ktlint](https://img.shields.io/badge/code%20style-%E2%9D%A4-FF4081.svg)](https://ktlint.github.io/)
-![Github Followers](https://img.shields.io/github/followers/hellosagar?label=Follow&style=social)
-![GitHub stars](https://img.shields.io/github/stars/hellosagar/AssigmentHub?style=social)
-![GitHub forks](https://img.shields.io/github/forks/hellosagar/AssigmentHub?style=social)
-![GitHub watchers](https://img.shields.io/github/watchers/hellosagar/AssigmentHub?style=social)
 ![Twitter Follow](https://img.shields.io/twitter/follow/SagarKh03980377?label=Follow&style=social)
 
 **AssigmentHub** is a Assignment manager ✅ Android application 📱 to help teachers to mange assignments in University built to demonstrate use of *Modern Android development* tools. Dedicated to all Android Developers and *AWS Amplify* with ❤️. 
@@ -79,16 +74,16 @@ Android app to manage assignments for teachers in college.
 ## Architecture
 This app uses [***MVVM (Model View View-Model)***](https://developer.android.com/jetpack/docs/guide#recommended-app-arch) architecture.
 
-![](https://developer.android.com/topic/libraries/architecture/images/final-architecture.png)
+![architecture](https://developer.android.com/topic/libraries/architecture/images/final-architecture.png)
 
 ## Discuss 💬
 
-Have any questions, doubts or want to present your opinions, views? You're always welcome. You can [start discussions](https://github.com/hellosagar/AssigmentHub/discussions).
+Have any questions, doubts or want to present your opinions, views? You're always welcome. You can [start discussion](https://github.com/hellosagar/AssigmentHub/discussions).
 
 ## Contact
 If you need any help, you can connect with me.
 
-Visit:- [hellosagarkhurana](https://www.instagram.com/hellosagarkhurana/)
+Visit: [hellosagarkhurana](https://www.instagram.com/hellosagarkhurana/)
 
 ## License
 ```
