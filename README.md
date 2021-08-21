@@ -12,6 +12,8 @@ Android application to manage assignments for teachers in college.
 
 **AssigmentHub** is a Assignment manager ✅ Android application 📱 to help teachers to mange assignments in University built to demonstrate use of *Modern Android development* tools. Dedicated to all Android Developers and *AWS Amplify* with ❤️. 
 
+Take a look at this blog for better understanding - [link](https://hellosagar.hashnode.dev/assignmenthub-an-app-to-manage-assignments-for-university-professors-aws-amplify-hackathon)
+
 ***You can Install and test latest AssigmentHub app from below 👇***
 
 [![AssigmentHub App](https://img.shields.io/badge/AssigmentHub✅-APK-red.svg?style=for-the-badge&logo=android)](https://github.com/hellosagar/AssigmentHub/releases/download/v1.2/app-release.apk)
