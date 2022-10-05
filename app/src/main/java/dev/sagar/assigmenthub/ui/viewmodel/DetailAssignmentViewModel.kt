@@ -4,11 +4,13 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.amplifyframework.datastore.generated.model.Assignment
 import com.amplifyframework.datastore.generated.model.StudentAssignmentMapping
 import dev.sagar.assigmenthub.data.repositories.DatabaseRepo
 import dev.sagar.assigmenthub.utils.Event
 import dev.sagar.assigmenthub.utils.ResponseModel
+import kotlinx.coroutines.launch
 
 class DetailAssignmentViewModel @ViewModelInject constructor(
     private val databaseRepo: DatabaseRepo
@@ -22,18 +24,14 @@ class DetailAssignmentViewModel @ViewModelInject constructor(
         MutableLiveData()
     var studentAssignmentUpdated: LiveData<Event<ResponseModel<String>>> = _studentAssignmentUpdated
 
-    fun updateStudentAssignmentMapping(studentAssignmentMapping: StudentAssignmentMapping) {
-        databaseRepo.updateStudentAssignmentMapping(
-            studentAssignmentMapping
-        ) { result ->
+    fun updateStudentAssignmentMapping(studentAssignmentMapping: StudentAssignmentMapping) = viewModelScope.launch {
+        databaseRepo.updateStudentAssignmentMapping(studentAssignmentMapping).also { result ->
             _studentAssignmentUpdated.postValue(Event(result))
         }
     }
 
-    fun endAssignment(assignment: Assignment) {
-        databaseRepo.endAssignment(
-            assignment
-        ) { result ->
+    fun endAssignment(assignment: Assignment) = viewModelScope.launch {
+        databaseRepo.endAssignment(assignment).also { result ->
             _assignmentEnded.postValue(Event(result))
         }
     }

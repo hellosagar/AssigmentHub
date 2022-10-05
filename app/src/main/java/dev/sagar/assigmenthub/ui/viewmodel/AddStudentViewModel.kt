@@ -4,6 +4,7 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.amplifyframework.datastore.generated.model.Branch
 import com.amplifyframework.datastore.generated.model.Status
 import com.amplifyframework.datastore.generated.model.Year
@@ -12,6 +13,7 @@ import dev.sagar.assigmenthub.utils.Event
 import dev.sagar.assigmenthub.utils.ResponseModel
 import dev.sagar.assigmenthub.utils.isEmailValid
 import dev.sagar.assigmenthub.utils.isNumeric
+import kotlinx.coroutines.launch
 
 class AddStudentViewModel @ViewModelInject constructor(
     private val databaseRepo: DatabaseRepo
@@ -26,91 +28,53 @@ class AddStudentViewModel @ViewModelInject constructor(
         branchString: String,
         yearString: String,
         email: String
-    ) {
-        if (!validateInput(name, rollNo, branchString, yearString, email)) {
-            return
-        }
+    ) = viewModelScope.launch {
+        if (!validateInput(name, rollNo, branchString, yearString, email)) return@launch
 
         _createStudent.postValue(Event(ResponseModel.Loading()))
 
         val year = Year.valueOf(yearString)
         val branch = Branch.valueOf(branchString)
-        databaseRepo.createStudent(
-            name, rollNo.toInt(), branch, year, email
-        ) { result ->
-            if (result is ResponseModel.Success) {
-                val student = result.response
-                getAllAssignmentsRelatedBranchYearID(student.id, student.branchYearId)
-            } else {
-                _createStudent.postValue(
-                    Event(
-                        ResponseModel.Error(
-                            null,
-                            "Unable to create the Student!"
-                        )
-                    )
-                )
-            }
+        databaseRepo.createStudent(name, rollNo.toInt(), branch, year, email).also {
+            if (it is ResponseModel.Success)
+                getAllAssignmentsRelatedBranchYearID(it.response.id, it.response.branchYearId)
+            else postError(null, "Unable to create the Student!")
         }
     }
 
-    private fun getAllAssignmentsRelatedBranchYearID(studentID: String, branchYearID: String) {
-        var mappingCount = 0
+    private fun postError(error: Throwable?, message: String) {
+        _createStudent.postValue(Event(ResponseModel.Error(error, message)))
+    }
 
-        databaseRepo.getAllAssignmentsSameBranchYearID(
-            branchYearID
-        ) { result ->
-            if (result is ResponseModel.Success) {
-                if (result.response.isEmpty()) {
-                    _createStudent.postValue(
-                        Event(
-                            ResponseModel.Success(
-                                "Student created!"
-                            )
-                        )
-                    )
-                    return@getAllAssignmentsSameBranchYearID
-                }
+    private fun getAllAssignmentsRelatedBranchYearID(studentID: String, branchYearID: String) =
+        viewModelScope.launch {
+            var mappingCount = 0
+            databaseRepo.getAllAssignmentsSameBranchYearID(branchYearID).also { result ->
+                if (result is ResponseModel.Success) {
+                    if (result.response.isEmpty()) {
+                        _createStudent.postValue(Event(ResponseModel.Success("Student created!")))
+                        return@also
+                    }
+                    for (assignment in result.response) {
+                        val status = assignment.status != Status.ONGOING
 
-                for (assignment in result.response) {
-
-                    val status = assignment.status != Status.ONGOING
-
-                    createStudentAssignmentMapping(
-                        studentID, assignment.id, status
-                    ) {
-                        mappingCount++
-                        if (result.response.size == mappingCount) {
-                            _createStudent.postValue(
-                                Event(
-                                    ResponseModel.Success(
-                                        "Student created!"
-                                    )
-                                )
-                            )
+                        createStudentAssignmentMapping(studentID, assignment.id, status) {
+                            mappingCount++
+                            if (result.response.size == mappingCount)
+                                _createStudent.postValue(Event(ResponseModel.Success("Student created!")))
                         }
                     }
-                }
-            } else {
-                _createStudent.postValue(
-                    Event(
-                        ResponseModel.Error(
-                            null,
-                            "Unable to create the Student!"
-                        )
-                    )
-                )
+                } else postError(null, "Unable to create the Student!")
             }
         }
-    }
 
-    private fun createStudentAssignmentMapping(
+    private suspend fun createStudentAssignmentMapping(
         studentID: String,
         assignmentID: String,
         status: Boolean,
         callback: (ResponseModel<String>) -> Unit
     ) {
-        databaseRepo.createStudentAssignmentMapping(studentID, assignmentID, callback, status)
+        databaseRepo.createStudentAssignmentMapping(studentID, assignmentID, status).also(callback)
     }
 
     private fun validateInput(

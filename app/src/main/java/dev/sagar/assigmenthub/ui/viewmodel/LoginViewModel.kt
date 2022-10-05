@@ -42,16 +42,11 @@ class LoginViewModel @ViewModelInject constructor(
         _loginUser.postValue(Event(ResponseModel.Error(error.error, error.message)))
     }
 
-    private fun getTeacher(authResponse: String, email: String) {
-
-        databaseRepo.getTeacher(
-            email
-        ) { result ->
+    private fun getTeacher(authResponse: String, email: String) = viewModelScope.launch {
+        databaseRepo.getTeacher(email).also { result ->
             val teacher: Teacher = (result as ResponseModel.Success).response
-            viewModelScope.launch {
-                saveTeacherInfo(teacher.id, teacher.name, teacher.email)
-                _loginUser.postValue(Event(ResponseModel.Success(authResponse)))
-            }
+            saveTeacherInfo(teacher.id, teacher.name, teacher.email)
+            _loginUser.postValue(Event(ResponseModel.Success(authResponse)))
         }
     }
 

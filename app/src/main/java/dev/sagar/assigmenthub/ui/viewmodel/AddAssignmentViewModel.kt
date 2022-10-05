@@ -16,7 +16,7 @@ import dev.sagar.assigmenthub.utils.Event
 import dev.sagar.assigmenthub.utils.ResponseModel
 import dev.sagar.assigmenthub.utils.getTeacherInfo
 import kotlinx.coroutines.launch
-import java.util.Date
+import java.util.*
 
 class AddAssignmentViewModel @ViewModelInject constructor(
     private val databaseRepo: DatabaseRepo,
@@ -33,80 +33,58 @@ class AddAssignmentViewModel @ViewModelInject constructor(
         yearString: String,
         lastDateString: String,
         description: String
-    ) {
-        if (!validateInput(name, subject, branchString, yearString, lastDateString, description)) {
-            return
-        }
+    ) = viewModelScope.launch {
+        if (!validateInput(
+                name,
+                subject,
+                branchString,
+                yearString,
+                lastDateString,
+                description
+            )
+        ) return@launch
 
         _createAssignment.postValue(Event(ResponseModel.Loading()))
         val year = Year.valueOf(yearString)
         val branch = Branch.valueOf(branchString)
         val date = Date()
-        viewModelScope.launch {
-            val teacherID = getTeacherInfo(dataStore, Constants.TEACHER_ID)
 
-            databaseRepo.createAssignment(
-                name, subject, branch, year, date, description, teacherID
-            ) { result ->
-                if (result is ResponseModel.Success) {
-                    getAllStudentWithBranchYear(result.response)
-                } else {
-                    _createAssignment.postValue(
-                        Event(
-                            ResponseModel.Error(
-                                null,
-                                "Unable to create the Assignment!"
-                            )
-                        )
-                    )
-                }
+        val teacherID = getTeacherInfo(dataStore, Constants.TEACHER_ID)
+
+        databaseRepo.createAssignment(name, subject, branch, year, date, description, teacherID)
+            .also { result ->
+                if (result is ResponseModel.Success) getAllStudentWithBranchYear(result.response)
+                else postError(null, "Unable to create the Assignment!")
             }
-        }
     }
 
-    private fun getAllStudentWithBranchYear(assignment: Assignment) {
+    private fun postError(error: Throwable?, message: String) {
+        _createAssignment.postValue(Event(ResponseModel.Error(error, message)))
+    }
+
+    private fun getAllStudentWithBranchYear(assignment: Assignment) = viewModelScope.launch {
         var mappingCount = 0
         val branchYearID = assignment.branchYearId
 
-        databaseRepo.getStudentsFromBranchYearID(
-            branchYearID
-        ) { result ->
+        databaseRepo.getStudentsFromBranchYearID(branchYearID).also { result ->
             if (result is ResponseModel.Success) {
                 for (student in result.response) {
-                    createStudentAssignmentMapping(
-                        student.id, assignment.id
-                    ) {
+                    createStudentAssignmentMapping(student.id, assignment.id) {
                         mappingCount++
-                        if (result.response.size == mappingCount) {
-                            _createAssignment.postValue(
-                                Event(
-                                    ResponseModel.Success(
-                                        "Assignment created!"
-                                    )
-                                )
-                            )
-                        }
+                        if (result.response.size == mappingCount)
+                            _createAssignment.postValue(Event(ResponseModel.Success("Assignment created!")))
                     }
                 }
-            } else {
-                _createAssignment.postValue(
-                    Event(
-                        ResponseModel.Error(
-                            null,
-                            "Unable to create the Assignment!"
-                        )
-                    )
-                )
-            }
+            } else postError(null, "Unable to create the Assignment!")
         }
     }
 
-    private fun createStudentAssignmentMapping(
+    private suspend fun createStudentAssignmentMapping(
         studentID: String,
         assignmentID: String,
         callback: (ResponseModel<String>) -> Unit
     ) {
-        databaseRepo.createStudentAssignmentMapping(studentID, assignmentID, callback)
+        databaseRepo.createStudentAssignmentMapping(studentID, assignmentID).also(callback)
     }
 
     private fun validateInput(

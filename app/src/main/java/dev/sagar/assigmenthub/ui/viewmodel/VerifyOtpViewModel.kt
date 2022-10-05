@@ -53,16 +53,11 @@ class VerifyOtpViewModel @ViewModelInject constructor(
         }
     }
 
-    fun createTeacher(name: String, email: String) {
-        databaseRepo.createTeacher(
-            name,
-            email
-        ) { result ->
-            viewModelScope.launch {
-                val teacher: Teacher = (result as ResponseModel.Success).response.data
-                saveTeacherInfo(teacher.id, teacher.name, teacher.email)
-                _createTeacher.postValue(Event(result))
-            }
+    fun createTeacher(name: String, email: String) = viewModelScope.launch {
+        databaseRepo.createTeacher(name, email).also { result ->
+            val teacher: Teacher = (result as ResponseModel.Success).response.data
+            saveTeacherInfo(teacher.id, teacher.name, teacher.email)
+            _createTeacher.postValue(Event(result))
         }
     }
 
