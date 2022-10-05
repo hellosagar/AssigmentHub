@@ -37,26 +37,19 @@ class VerifyOtpViewModel @ViewModelInject constructor(
         MutableLiveData()
     var createTeacher: LiveData<Event<ResponseModel<GraphQLResponse<Teacher>>>> = _createTeacher
 
-    fun loginTeacher(email: String, password: String) {
-        authRepo.signInTeacher(
-            email,
-            password
-        ) { result ->
-            _loginTeacher.postValue(Event(result))
+    fun loginTeacher(email: String, password: String) = viewModelScope.launch {
+        authRepo.signInTeacher(email, password).also {
+            _loginTeacher.postValue(Event(it))
         }
     }
 
-    fun verifyOtp(email: String, otp: String) {
-        if (!validateInput(otp)) {
-            return
-        }
+    fun verifyOtp(email: String, otp: String) = viewModelScope.launch {
+        if (!validateInput(otp)) return@launch
 
         _verifyTeacher.postValue(Event((ResponseModel.Loading())))
 
-        authRepo.confirmTeacher(
-            email, otp
-        ) { result ->
-            _verifyTeacher.postValue(Event(result))
+        authRepo.confirmTeacher(email, otp).also {
+            _verifyTeacher.postValue(Event(it))
         }
     }
 

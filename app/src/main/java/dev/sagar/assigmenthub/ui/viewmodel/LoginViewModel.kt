@@ -27,23 +27,19 @@ class LoginViewModel @ViewModelInject constructor(
     private var _loginUser: MutableLiveData<Event<ResponseModel<String>>> = MutableLiveData()
     var loginUser: LiveData<Event<ResponseModel<String>>> = _loginUser
 
-    fun loginUser(email: String, password: String) {
-        if (!validateInput(email, password)) {
-            return
-        }
+    fun loginUser(email: String, password: String) = viewModelScope.launch {
+        if (!validateInput(email, password)) return@launch
 
         _loginUser.postValue(Event((ResponseModel.Loading())))
 
-        authRepo.signInTeacher(
-            email,
-            password
-        ) { result ->
-            if (result is ResponseModel.Success) {
-                getTeacher(result.response, email)
-            } else if (result is ResponseModel.Error) {
-                _loginUser.postValue(Event(ResponseModel.Error(result.error, result.message)))
-            }
+        authRepo.signInTeacher(email, password).also {
+            if (it is ResponseModel.Success) getTeacher(it.response, email)
+            else if (it is ResponseModel.Error) postError(it)
         }
+    }
+
+    private fun postError(error: ResponseModel.Error<*>) {
+        _loginUser.postValue(Event(ResponseModel.Error(error.error, error.message)))
     }
 
     private fun getTeacher(authResponse: String, email: String) {
