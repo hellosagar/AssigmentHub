@@ -4,10 +4,12 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dev.sagar.assigmenthub.data.repositories.AuthRepo
 import dev.sagar.assigmenthub.utils.Event
 import dev.sagar.assigmenthub.utils.ResponseModel
 import dev.sagar.assigmenthub.utils.isEmailValid
+import kotlinx.coroutines.launch
 
 class RegisterViewModel @ViewModelInject constructor(
     private val authRepo: AuthRepo
@@ -16,17 +18,18 @@ class RegisterViewModel @ViewModelInject constructor(
     private var _createTeacher: MutableLiveData<Event<ResponseModel<String>>> = MutableLiveData()
     var createTeacher: LiveData<Event<ResponseModel<String>>> = _createTeacher
 
-    fun createUser(email: String, name: String, password: String, confirmPassword: String) {
-        if (!validateInput(email, name, password, confirmPassword)) {
-            return
-        }
+    fun createUser(
+        email: String,
+        name: String,
+        password: String,
+        confirmPassword: String
+    ) = viewModelScope.launch {
+        if (!validateInput(email, name, password, confirmPassword)) return@launch
 
         _createTeacher.postValue(Event(ResponseModel.Loading()))
 
-        authRepo.signUpTeacher(
-            email, name, password
-        ) { result ->
-            _createTeacher.postValue(Event(result))
+        authRepo.signUpTeacher(email, name, password).also {
+            _createTeacher.postValue(Event(it))
         }
     }
 

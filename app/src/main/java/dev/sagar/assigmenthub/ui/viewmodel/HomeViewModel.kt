@@ -4,11 +4,13 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.amplifyframework.datastore.generated.model.Assignment
 import com.amplifyframework.datastore.generated.model.Status
 import dev.sagar.assigmenthub.data.repositories.DatabaseRepo
 import dev.sagar.assigmenthub.utils.Event
 import dev.sagar.assigmenthub.utils.ResponseModel
+import kotlinx.coroutines.launch
 
 class HomeViewModel @ViewModelInject constructor(
     private val databaseRepo: DatabaseRepo
@@ -18,10 +20,8 @@ class HomeViewModel @ViewModelInject constructor(
         MutableLiveData()
     var getAssignments: LiveData<Event<ResponseModel<List<Assignment>>>> = _getAssignments
 
-    fun getAssignments(teacherID: String) {
-        databaseRepo.getAssignments(
-            teacherID
-        ) { result ->
+    fun getAssignments(teacherID: String) = viewModelScope.launch {
+        databaseRepo.getAssignments(teacherID).also { result ->
             _getAssignments.postValue(Event(result))
         }
     }

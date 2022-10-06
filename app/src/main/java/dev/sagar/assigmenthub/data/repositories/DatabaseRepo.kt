@@ -11,16 +11,17 @@ import dev.sagar.assigmenthub.utils.getUUIDString
 import timber.log.Timber
 import java.util.* // ktlint-disable no-wildcard-imports
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class DatabaseRepo @Inject constructor(
     private val api: ApiCategory
 ) {
 
-    fun createTeacher(
+    suspend fun createTeacher(
         name: String,
-        email: String,
-        callback: (ResponseModel<GraphQLResponse<Teacher>>) -> Unit
-    ) {
+        email: String
+    ) = suspendCoroutine<ResponseModel<GraphQLResponse<Teacher>>> {
         val teacher = Teacher.builder()
             .name(name)
             .email(email)
@@ -30,94 +31,89 @@ class DatabaseRepo @Inject constructor(
             ModelMutation.create(teacher),
             { result ->
                 Timber.i("createTeacher result: $result")
-                callback(ResponseModel.Success(result, "Teacher created in Database!"))
+                it.resume(ResponseModel.Success(result, "Teacher created in Database!"))
             },
             { error ->
                 Timber.e("createTeacher error $error")
-                callback(ResponseModel.Error(error, error.recoverySuggestion))
+                it.resume(ResponseModel.Error(error, error.recoverySuggestion))
             }
         )
     }
 
-    fun getTeacher(
-        email: String,
-        callback: (ResponseModel<Teacher>) -> Unit
-    ) {
+    suspend fun getTeacher(
+        email: String
+    ) = suspendCoroutine<ResponseModel<Teacher>> {
         api.mutate(
             ModelQuery.list(Teacher::class.java, Teacher.EMAIL.eq(email)),
             { result ->
                 Timber.i("getTeacher result: $result")
                 val teacher = (result.data.items).toList()[0]
-                callback(ResponseModel.Success(teacher))
+                it.resume(ResponseModel.Success(teacher))
             },
             { error ->
                 Timber.e("getTeacher error: $error")
-                callback(ResponseModel.Error(error, error.recoverySuggestion))
+                it.resume(ResponseModel.Error(error, error.recoverySuggestion))
             }
         )
     }
 
-    fun getAssignments(
-        teacherID: String,
-        callback: (ResponseModel<List<Assignment>>) -> Unit
-    ) {
+    suspend fun getAssignments(
+        teacherID: String
+    ) = suspendCoroutine<ResponseModel<List<Assignment>>> {
         api.mutate(
             ModelQuery.list(Assignment::class.java, Assignment.TEACHER_ID.eq(teacherID)),
             { result ->
                 Timber.i("getAssignments result: $result")
                 val assignments: List<Assignment> = (result.data.items).toList()
-                callback(ResponseModel.Success(assignments))
+                it.resume(ResponseModel.Success(assignments))
             },
             { error ->
                 Timber.e("getTeacher error: $error")
-                callback(ResponseModel.Error(error, error.recoverySuggestion))
+                it.resume(ResponseModel.Error(error, error.recoverySuggestion))
             }
         )
     }
 
-    fun getAllAssignmentsSameBranchYearID(
-        branchYearID: String,
-        callback: (ResponseModel<List<Assignment>>) -> Unit
-    ) {
+    suspend fun getAllAssignmentsSameBranchYearID(
+        branchYearID: String
+    ) = suspendCoroutine<ResponseModel<List<Assignment>>> {
         api.mutate(
             ModelQuery.list(Assignment::class.java, Assignment.BRANCH_YEAR_ID.eq(branchYearID)),
             { result ->
                 Timber.i("getAllAssignmentsSameBranchYearID result: $result")
                 val assignments: List<Assignment> = (result.data.items).toList()
-                callback(ResponseModel.Success(assignments))
+                it.resume(ResponseModel.Success(assignments))
             },
             { error ->
                 Timber.e("getAllAssignmentsSameBranchYearID error: $error")
-                callback(ResponseModel.Error(error, error.recoverySuggestion))
+                it.resume(ResponseModel.Error(error, error.recoverySuggestion))
             }
         )
     }
 
-    fun endAssignment(
-        assignment: Assignment,
-        callback: (ResponseModel<String>) -> Unit
-    ) {
+    suspend fun endAssignment(
+        assignment: Assignment
+    ) = suspendCoroutine<ResponseModel<String>> {
         api.mutate(
             ModelMutation.update(assignment),
             { result ->
                 Timber.i("endAssignment result: $result")
-                callback(ResponseModel.Success(result.toString()))
+                it.resume(ResponseModel.Success(result.toString()))
             },
             { error ->
                 Timber.e("endAssignment error: $error")
-                callback(ResponseModel.Error(error, error.recoverySuggestion))
+                it.resume(ResponseModel.Error(error, error.recoverySuggestion))
             }
         )
     }
 
-    fun createStudent(
+    suspend fun createStudent(
         name: String,
         rollNo: Int,
         branch: Branch,
         year: Year,
-        email: String,
-        callback: (ResponseModel<Student>) -> Unit
-    ) {
+        email: String
+    ) = suspendCoroutine<ResponseModel<Student>> {
         val student = Student.builder()
             .name(name)
             .rollNo(rollNo)
@@ -131,39 +127,35 @@ class DatabaseRepo @Inject constructor(
             ModelMutation.create(student),
             { result ->
                 Timber.i("createStudent result: $result")
-                callback(ResponseModel.Success(result.data))
+                it.resume(ResponseModel.Success(result.data))
             },
             { error ->
                 Timber.e("createStudent error $error")
-                callback(ResponseModel.Error(error, error.recoverySuggestion))
+                it.resume(ResponseModel.Error(error, error.recoverySuggestion))
             }
         )
     }
 
-    fun getStudentsFromBranchYearID(
-        branchYearID: String,
-        callback: (ResponseModel<List<Student>>) -> Unit
-    ) {
-
+    suspend fun getStudentsFromBranchYearID(
+        branchYearID: String
+    ) = suspendCoroutine<ResponseModel<List<Student>>> {
         api.query(
             ModelQuery.list(Student::class.java, Student.BRANCH_YEAR_ID.eq(branchYearID)),
             { result ->
                 val studentsList: List<Student> = (result.data.items).toList()
-                callback(ResponseModel.Success(studentsList))
+                it.resume(ResponseModel.Success(studentsList))
             },
             { error ->
-                callback(ResponseModel.Error(error, "getStudentsFromBranchYearID error $error"))
+                it.resume(ResponseModel.Error(error, "getStudentsFromBranchYearID error $error"))
             }
         )
     }
 
-    fun createStudentAssignmentMapping(
+    suspend fun createStudentAssignmentMapping(
         studentID: String,
         assignmentID: String,
-        callback: (ResponseModel<String>) -> Unit,
         status: Boolean = false
-    ) {
-
+    ) = suspendCoroutine<ResponseModel<String>> {
         val studentAssignmentMapping = StudentAssignmentMapping.builder()
             .status(status)
             .assignment(Assignment.justId(assignmentID))
@@ -174,43 +166,40 @@ class DatabaseRepo @Inject constructor(
             ModelMutation.create(studentAssignmentMapping),
             { result ->
                 Timber.i("createStudentAssignmentMapping result: $result")
-                callback(ResponseModel.Success(result.data.toString()))
+                it.resume(ResponseModel.Success(result.data.toString()))
             },
             { error ->
                 Timber.e("createAssignment error $error")
-                callback(ResponseModel.Error(error, error.recoverySuggestion))
+                it.resume(ResponseModel.Error(error, error.recoverySuggestion))
             }
         )
     }
 
-    fun updateStudentAssignmentMapping(
-        studentAssignmentMapping: StudentAssignmentMapping,
-        callback: (ResponseModel<String>) -> Unit
-    ) {
-
+    suspend fun updateStudentAssignmentMapping(
+        studentAssignmentMapping: StudentAssignmentMapping
+    ) = suspendCoroutine<ResponseModel<String>> {
         api.mutate(
             ModelMutation.update(studentAssignmentMapping),
             { result ->
                 Timber.i("updateStudentAssignmentMapping result: $result")
-                callback(ResponseModel.Success(result.data.toString()))
+                it.resume(ResponseModel.Success(result.data.toString()))
             },
             { error ->
                 Timber.e("updateStudentAssignmentMapping error $error")
-                callback(ResponseModel.Error(error, error.recoverySuggestion))
+                it.resume(ResponseModel.Error(error, error.recoverySuggestion))
             }
         )
     }
 
-    fun createAssignment(
+    suspend fun createAssignment(
         name: String,
         subject: String,
         branch: Branch,
         year: Year,
         date: Date,
         description: String,
-        teacherID: String,
-        callback: (ResponseModel<Assignment>) -> Unit
-    ) {
+        teacherID: String
+    ) = suspendCoroutine<ResponseModel<Assignment>> {
         val assignment = Assignment.builder()
             .teacherId(teacherID)
             .name(name)
@@ -227,11 +216,11 @@ class DatabaseRepo @Inject constructor(
             ModelMutation.create(assignment),
             { result ->
                 Timber.i("createAssignment result: $result")
-                callback(ResponseModel.Success(result.data))
+                it.resume(ResponseModel.Success(result.data))
             },
             { error ->
                 Timber.e("createAssignment error $error")
-                callback(ResponseModel.Error(error, error.recoverySuggestion))
+                it.resume(ResponseModel.Error(error, error.recoverySuggestion))
             }
         )
     }
